@@ -1,0 +1,41 @@
+{
+  "manifest_version": "0.2",
+  "name": "chessagine-mcp",
+  "version": "1.0.0",
+  "description": "Connect to ChessAgine Chess Context Protocol tools, access to stockfish, chess board state, analysis of themes making LLM more chess aware",
+  "author": {
+    "name": "Jalp",
+    "url": "https://github.com/jalpp"
+  },
+  "documentation": "https://github.com/jalpp/chessagineweb",
+  "support": "https://github.com/jalpp/chessagineweb",
+  "server": {
+    "type": "node",
+    "entry_point": "/dist/stdio.js",
+    "mcp_config": {
+      "command": "node",
+      "args": [
+        "${__dirname}/dist/stdio.js"
+      ],
+      "env": {}
+    }
+  },
+  "tools": [
+    {
+      "name": "get-stockfish-move-analysis",
+      "description": "Analyze a given chess position after a specific move using Stockfish and provide best move, reasoning, variation, speech eval, and number eval."
+    },
+    {
+      "name": "get-theme-progression",
+      "description": "Get the progression of a specific chess theme over a variation"
+    },
+    {
+      "name": "get-theme-scores",
+      "description": "Get chess theme scores (material, mobility, space, positional, king safety) for a given position fen and the side to eval from"
+    }
+  ],
+  "keywords": [
+    "chess"
+  ],
+  "license": "GPL"
+}
