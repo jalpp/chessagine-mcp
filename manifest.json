@@ -1,41 +1,102 @@
 {
   "manifest_version": "0.2",
-  "name": "chessagine-mcp",
-  "version": "1.0.0",
-  "description": "Connect to ChessAgine Chess Context Protocol tools, access to stockfish, chess board state, analysis of themes making LLM more chess aware",
+  "name": "chessagine-mcp-v0.1",
+  "version": "1.0.2",
+  "description": "Connect to ChessAgine Chess Context Protocol tools, access to stockfish, chess board state, analysis of themes making LLM more chess aware, get access to chessdb, and lichess games.",
   "author": {
     "name": "Jalp",
     "url": "https://github.com/jalpp"
   },
-  "documentation": "https://github.com/jalpp/chessagineweb",
-  "support": "https://github.com/jalpp/chessagineweb",
+  "icon": "icon.png",
+  "screenshots": [
+    "assets/screenshots/claude1.png",
+    "assets/screenshots/claude2.png"
+  ],
+  "documentation": "https://github.com/jalpp/chessagine-mcp",
+  "support": "https://discord.gg/N2J2sP9yTm",
   "server": {
     "type": "node",
-    "entry_point": "/dist/stdio.js",
+    "entry_point": "/build/mastra/stdio.js",
     "mcp_config": {
       "command": "node",
       "args": [
-        "${__dirname}/dist/stdio.js"
+        "${__dirname}/build/mastra/stdio.js"
       ],
       "env": {}
     }
   },
-  "tools": [
-    {
-      "name": "get-stockfish-move-analysis",
-      "description": "Analyze a given chess position after a specific move using Stockfish and provide best move, reasoning, variation, speech eval, and number eval."
-    },
-    {
-      "name": "get-theme-progression",
-      "description": "Get the progression of a specific chess theme over a variation"
-    },
+    "tools": [
     {
       "name": "get-theme-scores",
-      "description": "Get chess theme scores (material, mobility, space, positional, king safety) for a given position fen and the side to eval from"
+      "description": "Analyze chess position themes (material, mobility, space, positional factors, king safety) for strategic evaluation from white or black perspective."
+    },
+    {
+      "name": "analyze-variation-themes",
+      "description": "Track how chess themes evolve across a sequence of moves, showing positional changes and strategic developments in variations."
+    },
+    {
+      "name": "get-theme-progression", 
+      "description": "Monitor the progression of a specific chess theme (material/mobility/space/positional/king safety) throughout a variation of moves."
+    },
+    {
+      "name": "compare-variations",
+      "description": "Compare multiple chess variations side-by-side, analyzing theme changes and strategic differences to identify the strongest continuation."
+    },
+    {
+      "name": "find-critical-moments",
+      "description": "Identify key moves in a variation where significant theme changes occur, highlighting turning points and critical decision moments."
+    },
+    {
+      "name": "get-stockfish-analysis",
+      "description": "Perform deep Stockfish engine analysis of any chess position, providing best moves, evaluation scores, principal variations, and strategic reasoning."
+    },
+    {
+      "name": "get-stockfish-move-analysis", 
+      "description": "Analyze a chess position after playing a specific move, showing the resulting evaluation and best continuations using Stockfish engine."
+    },
+    {
+      "name": "is-legal-move",
+      "description": "Verify if a proposed move is legal in the given chess position, ensuring move validation before analysis or gameplay."
+    },
+    {
+      "name": "boardstate-to-prompt",
+      "description": "Generate detailed text description of a chess position after a move, converting board state into natural language for analysis and discussion."
+    },
+    {
+      "name": "get-chess-knowledgebase",
+      "description": "Access comprehensive chess knowledge including Silman's imbalances, Fine's principles, endgame theory, and practical improvement checklists."
+    },
+    {
+      "name": "get-lichess-master-games",
+      "description": "Retrieve master-level games and opening statistics from Lichess database for any position, including win rates and popular continuations."
+    },
+    {
+      "name": "get-lichess-games",
+      "description": "Fetch regular Lichess user games and opening statistics, providing insights into how positions are played at various skill levels."
+    },
+    {
+      "name": "get-chessdb-analysis",
+      "description": "Query ChessDB for position analysis with candidate moves, evaluations, win rates, and move quality ratings from extensive game databases."
+    }
+  ],
+  "prompts": [
+    {
+      "name": "analysis",
+      "description": "Have LLM analyze the position",
+      "text": "Analyze this position using ChessAgine Mode"
     }
   ],
   "keywords": [
-    "chess"
+    "chess",
+    "stockfish",
+    "analysis",
+    "opening",
+    "database",
+    "lichess",
+    "chessdb",
+    "strategy",
+    "tactics",
+    "engine"
   ],
   "license": "GPL"
 }

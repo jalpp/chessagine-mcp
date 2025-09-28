@@ -3,8 +3,8 @@
   "version": "1.0.0",
   "description": "",
   "type": "module",
-  "main": "dist/stdio.js",
-  "bin": "dist/stdio.js",
+  "main": "build/mastra/stdio.js",
+  "bin": "build/mastra/stdio.js",
   "exports": {
     ".": {
       "types": "./dist/stdio.d.ts",
@@ -14,7 +14,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "mastra dev",
-    "build:mcp": "tsup src/mastra/stdio.ts --format esm --no-splitting --dts && chmod +x dist/stdio.js",
+    "build:mcp": "tsc && chmod +x build/mastra/stdio.js",
     "start": "mastra start"
   },
   "keywords": [],
@@ -30,6 +30,7 @@
     "@mastra/loggers": "^0.10.13",
     "@mastra/mcp": "^0.13.1",
     "@mastra/memory": "^0.15.3",
+    "@modelcontextprotocol/sdk": "^1.18.2",
     "chess.js": "^1.4.0",
     "tsup": "^8.5.0",
     "zod": "^3.25.76"
