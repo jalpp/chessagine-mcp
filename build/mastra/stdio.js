@@ -8,7 +8,12 @@ import { generateChessAnalysis, getChessEvaluation } from "./fish.js";
 import { getKnowledgeBase } from "./knowlegebase.js";
 import { getThemeProgression, getThemeScores, analyzeVariationThemes, findCriticalMoments, compareVariations, } from "./ovp.js";
 import { PositionPrompter } from "./positionPrompter.js";
-import { agineSystemPrompt, chessAgineAnnoPrompt } from "./prompt.js";
+import { agineDesigner, agineSystemPrompt, chessAgineAnnoPrompt } from "./prompt.js";
+import { collectFensFromGame, getChessDbNoteWord } from "./utils.js";
+import { fetchPuzzle, getDifficultyLevel, getThemeDescriptions, PUZZLE_THEMES } from "./puzzle.js";
+import { viewBoardArtifact } from "./imageRenderArififact.js";
+import { formatGameReview, generateGameReview } from "./gamereview.js";
+import { gameRenderHtml } from "./gameRender.js";
 // Create server instance
 const server = new McpServer({
     name: "chessagine-mcp",
@@ -94,7 +99,7 @@ server.tool("get-theme-progression", "Get the progression of a specific chess th
         "material",
         "mobility",
         "space",
-        "positional",
+        "pawnStructure",
         "kingSafety",
     ]).describe("Theme to track"),
 }, async ({ rootFen, moves, color, theme }) => {
@@ -379,18 +384,6 @@ server.tool("get-lichess-games", "Fetch Lichess user games and opening statistic
         ],
     };
 });
-function getChessDbNoteWord(note) {
-    switch (note) {
-        case "!":
-            return "Best";
-        case "*":
-            return "Good";
-        case "?":
-            return "Bad";
-        default:
-            return "unknown";
-    }
-}
 // 13. Get ChessDB Analysis
 server.tool("get-chessdb-analysis", "Fetch position analysis and candidate moves from ChessDB", {
     fen: fenSchema,
@@ -478,6 +471,443 @@ server.tool("get-chess-knowledgebase", "Returns a comprehensive chess knowledgeb
         };
     }
 });
+// 14. Render Chess Board
+server.tool("generate-chess-board-view-artificat-using-html", "get HTML code to render chess board for given FEN, and use this code to generate an artificat", {
+    fen: fenSchema,
+    side: z.enum(["w", "b"]).optional().default("w").describe("Side to view the board from (white or black perspective). Note: Current implementation shows from white's perspective."),
+}, async ({ fen, side = "w" }) => {
+    try {
+        // Extract just the position part if full FEN is provided
+        const fullFen = fen.includes(' ') ? fen : `${fen} ${side} KQkq - 0 1`;
+        const artifactHtml = viewBoardArtifact;
+        return {
+            content: [
+                {
+                    type: "text",
+                    text: `Chess position rendered. FEN: ${fullFen}\n\nUse the artifact above to view the interactive chess board.`,
+                },
+                {
+                    type: "resource",
+                    resource: {
+                        uri: `data:text/html;base64,${Buffer.from(artifactHtml).toString('base64')}`,
+                        mimeType: "text/html",
+                        text: artifactHtml
+                    }
+                }
+            ],
+        };
+    }
+    catch (error) {
+        return {
+            content: [
+                {
+                    type: "text",
+                    text: `Error rendering chess board: ${error}`,
+                },
+            ],
+        };
+    }
+});
+server.tool("generate-dynamic-gameview-html", "get HTML code to render chess board for a game with multiple fens to render game view mode", {}, async ({}) => {
+    try {
+        const artifactHtml = gameRenderHtml;
+        return {
+            content: [
+                {
+                    type: "text",
+                    text: `Chess positions rendered. Use the artifact above to view the interactive chess board.`,
+                },
+                {
+                    type: "resource",
+                    resource: {
+                        uri: `data:text/html;base64,${Buffer.from(artifactHtml).toString('base64')}`,
+                        mimeType: "text/html",
+                        text: artifactHtml
+                    }
+                }
+            ],
+        };
+    }
+    catch (error) {
+        return {
+            content: [
+                {
+                    type: "text",
+                    text: `Error rendering chess board: ${error}`,
+                },
+            ],
+        };
+    }
+});
+// 15. Fetch User Recent Games
+server.tool("fetch-lichess-games", "Fetch the 20 most recent games for a Lichess user. Returns game details including player information, ratings, speed format, and PGN notation. Useful for analyzing a player's recent performance, openings, and game history.", {
+    username: z.string().describe("Lichess username to fetch games for"),
+}, async ({ username }) => {
+    try {
+        const response = await fetch(`https://lichess.org/api/games/user/${username}?until=${Date.now()}&max=20&pgnInJson=true&sort=dateDesc`, {
+            method: "GET",
+            headers: { accept: "application/x-ndjson" }
+        });
+        if (!response.ok) {
+            if (response.status === 404) {
+                return {
+                    content: [
+                        {
+                            type: "text",
+                            text: `User "${username}" not found on Lichess.`,
+                        },
+                    ],
+                };
+            }
+            throw new Error(`Failed to fetch games: ${response.statusText}`);
+        }
+        const rawData = await response.text();
+        const games = rawData
+            .split("\n")
+            .filter(Boolean)
+            .map((game) => JSON.parse(game));
+        if (games.length === 0) {
+            return {
+                content: [
+                    {
+                        type: "text",
+                        text: `No games found for user "${username}".`,
+                    },
+                ],
+            };
+        }
+        // Format games for better readability
+        const formattedGames = games.map((game, index) => {
+            const white = game.players.white;
+            const black = game.players.black;
+            const date = new Date(game.lastMoveAt).toLocaleString();
+            return `Game ${index + 1}:
+- ID: ${game.id}
+- Speed: ${game.speed}
+- Date: ${date}
+- White: ${white.user?.name || "Anonymous"} (${white.rating || "?"})
+- Black: ${black.user?.name || "Anonymous"} (${black.rating || "?"})
+- PGN available: Yes`;
+        }).join("\n\n");
+        return {
+            content: [
+                {
+                    type: "text",
+                    text: `Found ${games.length} recent games for "${username}":\n\n${formattedGames}\n\nRaw game data:`,
+                },
+                {
+                    type: "text",
+                    text: JSON.stringify(games, null, 2),
+                },
+            ],
+        };
+    }
+    catch (error) {
+        return {
+            content: [
+                {
+                    type: "text",
+                    text: `Error fetching recent games: ${error instanceof Error ? error.message : String(error)}`,
+                },
+            ],
+        };
+    }
+});
+// 16. Fetch Lichess Game by URL or ID
+server.tool("fetch-lichess-game", "Fetch a specific Lichess game in PGN format. Accepts either a full Lichess URL or a game ID. Returns the complete PGN notation with headers and moves, ready for analysis or display.", {
+    gameUrlOrId: z.string().describe("Lichess game URL (e.g., https://lichess.org/abc12345) or game ID (e.g., abc12345)"),
+}, async ({ gameUrlOrId }) => {
+    try {
+        // Extract game ID from URL or use as-is if already an ID
+        let gameId = gameUrlOrId;
+        // Check if it's a URL
+        if (gameUrlOrId.includes("lichess.org") || gameUrlOrId.includes("/")) {
+            try {
+                const urlObj = new URL(gameUrlOrId);
+                const pathname = urlObj.pathname;
+                const gameIdMatch = pathname.match(/^\/([a-zA-Z0-9]{8,12})(?:\/|$)/);
+                if (gameIdMatch) {
+                    gameId = gameIdMatch[1];
+                    if (gameId.length > 8) {
+                        gameId = gameId.substring(0, 8);
+                    }
+                }
+                else {
+                    throw new Error("Could not extract game ID from URL");
+                }
+            }
+            catch (urlError) {
+                // Fallback: try parsing as path
+                const parts = gameUrlOrId.split("/");
+                if (parts.length >= 4) {
+                    gameId = parts[3];
+                    const cleanGameId = gameId.split(/[?#]/)[0];
+                    gameId = cleanGameId.substring(0, 8);
+                }
+                else {
+                    throw new Error("Invalid URL format");
+                }
+            }
+        }
+        if (!gameId || gameId.length < 8) {
+            return {
+                content: [
+                    {
+                        type: "text",
+                        text: `Invalid game ID extracted: "${gameId}". Please provide a valid Lichess game URL or 8-character game ID.`,
+                    },
+                ],
+            };
+        }
+        // Fetch the game PGN
+        const response = await fetch(`https://lichess.org/game/export/${gameId}`, {
+            headers: {
+                Accept: "application/x-chess-pgn",
+            },
+        });
+        if (!response.ok) {
+            throw new Error(`Failed to fetch game: ${response.status} ${response.statusText}`);
+        }
+        const pgnText = await response.text();
+        if (!pgnText || pgnText.trim() === "") {
+            throw new Error("Empty PGN received from Lichess");
+        }
+        return {
+            content: [
+                {
+                    type: "text",
+                    text: `Successfully fetched game ${gameId}:\n\n${pgnText}`,
+                },
+            ],
+        };
+    }
+    catch (error) {
+        return {
+            content: [
+                {
+                    type: "text",
+                    text: `Error fetching Lichess game: ${error instanceof Error ? error.message : String(error)}`,
+                },
+            ],
+        };
+    }
+});
+// 15. Fetch Chess Puzzle
+server.tool("fetch-chess-puzzle", "Fetch a random chess puzzle from Lichess database. Can filter by themes and rating range. Use this to start a puzzle session with the user.", {
+    themes: z.array(z.string()).optional().describe("Array of puzzle theme tags to filter by (e.g., ['fork', 'pin', 'mateIn2'])"),
+    ratingFrom: z.number().optional().describe("Minimum puzzle rating (e.g., 1000)"),
+    ratingTo: z.number().optional().describe("Maximum puzzle rating (e.g., 2000)"),
+}, async ({ themes, ratingFrom, ratingTo }) => {
+    try {
+        const puzzle = await fetchPuzzle({
+            themes,
+            ratingFrom,
+            ratingTo,
+        });
+        if (!puzzle) {
+            return {
+                content: [
+                    {
+                        type: "text",
+                        text: "Failed to fetch puzzle. Please try again.",
+                    },
+                ],
+            };
+        }
+        // Parse the solution moves
+        const solutionMoves = puzzle.moves.split(" ");
+        const firstMove = puzzle.preMove; // The move that was just played
+        // Determine whose turn it is from the FEN
+        const turnToMove = puzzle.FEN.split(" ")[1] === "w" ? "White" : "Black";
+        // Get theme descriptions
+        const themeDescriptions = getThemeDescriptions(puzzle.themes);
+        const difficultyLevel = getDifficultyLevel(puzzle.rating);
+        const puzzleSession = {
+            lichessId: puzzle.lichessId,
+            rating: puzzle.rating,
+            difficulty: difficultyLevel,
+            themes: puzzle.themes,
+            themeDescriptions: themeDescriptions,
+            gameURL: puzzle.gameURL,
+            // Position information
+            previousFEN: puzzle.previousFEN,
+            currentFEN: puzzle.FEN,
+            turnToMove: turnToMove,
+            // Move information
+            opponentLastMove: firstMove,
+            solution: solutionMoves,
+            firstSolutionMove: solutionMoves[0],
+            totalMoves: solutionMoves.length,
+            // Instructions for Claude
+            instructions: `A puzzle session has been started. The opponent just played ${firstMove}. It's ${turnToMove} to move. Guide the user through finding the best move without immediately revealing the answer. If they need help, provide hints about the tactical theme (${themeDescriptions.join(", ")}). The first move of the solution is ${solutionMoves[0]}.`,
+        };
+        return {
+            content: [
+                {
+                    type: "text",
+                    text: JSON.stringify(puzzleSession, null, 2),
+                },
+            ],
+        };
+    }
+    catch (error) {
+        return {
+            content: [
+                {
+                    type: "text",
+                    text: `Error fetching puzzle: ${error}`,
+                },
+            ],
+        };
+    }
+});
+// 16. Get Available Puzzle Themes
+server.tool("get-puzzle-themes", "Get a list of all available puzzle themes that can be used to filter puzzles", {}, async () => {
+    try {
+        const themes = PUZZLE_THEMES.map(theme => ({
+            tag: theme.tag,
+            description: theme.description,
+        }));
+        return {
+            content: [
+                {
+                    type: "text",
+                    text: JSON.stringify({
+                        totalThemes: themes.length,
+                        themes: themes,
+                        popularThemes: [
+                            "fork", "pin", "skewer", "discoveredAttack",
+                            "mateIn1", "mateIn2", "mateIn3",
+                            "hangingPiece", "sacrifice", "deflection"
+                        ],
+                        difficultyThemes: [
+                            "mateIn1", "mateIn2", "mateIn3", "mateIn4", "mateIn5",
+                            "short", "long", "veryLong"
+                        ],
+                    }, null, 2),
+                },
+            ],
+        };
+    }
+    catch (error) {
+        return {
+            content: [
+                {
+                    type: "text",
+                    text: `Error getting puzzle themes: ${error}`,
+                },
+            ],
+        };
+    }
+});
+server.tool("generate-game-review", "Generate a comprehensive game review with theme progression analysis from a PGN. Analyzes material, mobility, space, positional play, and king safety for both players throughout the game.", {
+    pgn: z.string().describe("Game PGN with moves and optional headers"),
+    criticalMomentThreshold: z.number()
+        .min(0.1)
+        .max(2.0)
+        .default(0.5)
+        .optional()
+        .describe("Threshold for identifying critical moments (default: 0.5). Lower values find more moments."),
+    format: z.enum(["json", "text"])
+        .default("text")
+        .optional()
+        .describe("Output format: 'json' for structured data or 'text' for human-readable report"),
+}, async ({ pgn, criticalMomentThreshold = 0.5, format = "text" }) => {
+    try {
+        const review = generateGameReview(pgn, criticalMomentThreshold);
+        if (format === "json") {
+            return {
+                content: [
+                    {
+                        type: "text",
+                        text: JSON.stringify(review, null, 2),
+                    },
+                ],
+            };
+        }
+        // Text format - human readable
+        const formattedReview = formatGameReview(review);
+        // Also include detailed theme changes
+        let detailedOutput = formattedReview + "\n\n";
+        detailedOutput += "=== DETAILED THEME CHANGES ===\n\n";
+        detailedOutput += "WHITE:\n";
+        review.whiteAnalysis.overallThemes.themeChanges.forEach(tc => {
+            detailedOutput += `  ${tc.theme}: ${tc.initialScore.toFixed(2)} → ${tc.finalScore.toFixed(2)} `;
+            detailedOutput += `(${tc.change > 0 ? '+' : ''}${tc.change.toFixed(2)}, ${tc.percentChange.toFixed(1)}%)\n`;
+        });
+        detailedOutput += "\nBLACK:\n";
+        review.blackAnalysis.overallThemes.themeChanges.forEach(tc => {
+            detailedOutput += `  ${tc.theme}: ${tc.initialScore.toFixed(2)} → ${tc.finalScore.toFixed(2)} `;
+            detailedOutput += `(${tc.change > 0 ? '+' : ''}${tc.change.toFixed(2)}, ${tc.percentChange.toFixed(1)}%)\n`;
+        });
+        // Add critical moments details
+        if (review.whiteAnalysis.criticalMoments.length > 0) {
+            detailedOutput += "\n=== WHITE'S CRITICAL MOMENTS ===\n";
+            review.whiteAnalysis.criticalMoments.forEach((cm, i) => {
+                const moveNum = Math.floor(cm.moveIndex / 2) + 1;
+                detailedOutput += `\nMove ${moveNum}: ${cm.move}\n`;
+                cm.themeChanges.forEach(tc => {
+                    detailedOutput += `  ${tc.theme}: ${tc.change > 0 ? '+' : ''}${tc.change.toFixed(2)}\n`;
+                });
+            });
+        }
+        if (review.blackAnalysis.criticalMoments.length > 0) {
+            detailedOutput += "\n=== BLACK'S CRITICAL MOMENTS ===\n";
+            review.blackAnalysis.criticalMoments.forEach((cm, i) => {
+                const moveNum = Math.floor(cm.moveIndex / 2) + 1;
+                detailedOutput += `\nMove ${moveNum}: ${cm.move}\n`;
+                cm.themeChanges.forEach(tc => {
+                    detailedOutput += `  ${tc.theme}: ${tc.change > 0 ? '+' : ''}${tc.change.toFixed(2)}\n`;
+                });
+            });
+        }
+        return {
+            content: [
+                {
+                    type: "text",
+                    text: detailedOutput,
+                },
+            ],
+        };
+    }
+    catch (error) {
+        return {
+            content: [
+                {
+                    type: "text",
+                    text: `Error generating game review: ${error instanceof Error ? error.message : 'Invalid PGN or analysis error'}`,
+                },
+            ],
+        };
+    }
+});
+server.tool("parse-pgn-into-fens", "Collect a fen list of given game pgn", {
+    pgn: z.string().describe("Game PGN"),
+}, async ({ pgn }) => {
+    try {
+        const fens = collectFensFromGame(pgn);
+        return {
+            content: [
+                {
+                    type: "text",
+                    text: JSON.stringify({
+                        fens: fens
+                    }, null, 2),
+                },
+            ],
+        };
+    }
+    catch (error) {
+        return {
+            content: [
+                {
+                    type: "text",
+                    text: `invalid PGN`,
+                },
+            ],
+        };
+    }
+});
 // prompts
 server.registerPrompt("analyze-position", {
     title: "Analyze Chess Position",
@@ -530,6 +960,18 @@ server.registerPrompt("Become-ChessAgine-Chess-Annotation-Expert", {
             content: {
                 type: "text",
                 text: `${chessAgineAnnoPrompt}`
+            }
+        }]
+}));
+server.registerPrompt("Design-ChessDashboards", {
+    title: "Use chessdashboard UI design guide to create dashboards for user",
+    description: "Use chessdashboard UI design guide to create dashboards for user",
+}, () => ({
+    messages: [{
+            role: "user",
+            content: {
+                type: "text",
+                text: `${agineDesigner}`
             }
         }]
 }));

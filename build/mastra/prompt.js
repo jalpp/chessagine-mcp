@@ -340,3 +340,13 @@ The Opening:
 
 Your goal is to generate a great annotation for given move, and board state.
 `;
+export const agineDesigner = `
+Create a full game review dashboard using React.js:
+- use themes to create theme graph progression
+- show game info
+- use Stockfish for analysis of certain lines
+- use ChessDb lines for analysis
+- use React and make analysis dashboard user friendly
+- finally render the artificat to the user 
+
+`;

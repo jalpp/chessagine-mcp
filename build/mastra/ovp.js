@@ -19,7 +19,7 @@ export function getThemeScores(fen, color) {
         material: scorer.getThemeScore(STATE_THEMES.MATERIAL),
         mobility: scorer.getThemeScore(STATE_THEMES.MOBILITY),
         space: scorer.getThemeScore(STATE_THEMES.SPACE),
-        positional: scorer.getThemeScore(STATE_THEMES.POSITIONAL),
+        pawnStructure: scorer.getThemeScore(STATE_THEMES.POSITIONAL),
         kingSafety: scorer.getThemeScore(STATE_THEMES.KING_SAFETY)
     };
 }
@@ -38,7 +38,7 @@ export function analyzeVariationThemes(rootFen, moves, color) {
     const moveByMoveScores = fens.map(fen => getThemeScores(fen, color));
     const initialScores = moveByMoveScores[0];
     const finalScores = moveByMoveScores[moveByMoveScores.length - 1];
-    const themeNames = ['material', 'mobility', 'space', 'positional', 'kingSafety'];
+    const themeNames = ['material', 'mobility', 'space', 'pawnStructure', 'kingSafety'];
     const themeChanges = themeNames.map(theme => {
         const initial = initialScores[theme];
         const final = finalScores[theme];
@@ -88,7 +88,7 @@ export function findCriticalMoments(rootFen, moves, color, threshold = 0.5) {
     for (let i = 1; i < fens.length; i++) {
         const previousScores = getThemeScores(fens[i - 1], color);
         const currentScores = getThemeScores(fens[i], color);
-        const themeNames = ['material', 'mobility', 'space', 'positional', 'kingSafety'];
+        const themeNames = ['material', 'mobility', 'space', 'pawnStructure', 'kingSafety'];
         const moveThemeChanges = themeNames.map(theme => {
             const initial = previousScores[theme];
             const final = currentScores[theme];

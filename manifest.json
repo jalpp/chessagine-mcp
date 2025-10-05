@@ -1,7 +1,7 @@
 {
   "manifest_version": "0.2",
-  "name": "chessagine-mcp-v0.1",
-  "version": "1.0.2",
+  "name": "chessagine-mcp-v0.2",
+  "version": "1.0.4",
   "description": "Connect to ChessAgine Chess Context Protocol tools, access to stockfish, chess board state, analysis of themes making LLM more chess aware, get access to chessdb, and lichess games.",
   "author": {
     "name": "Jalp",
@@ -77,6 +77,34 @@
     {
       "name": "get-chessdb-analysis",
       "description": "Query ChessDB for position analysis with candidate moves, evaluations, win rates, and move quality ratings from extensive game databases."
+    },
+    {
+      "name": "generate-chess-board-view-artificat-using-html",
+      "description": "Renders chess board in HTML"
+    },
+    {
+      "name": "generate-dynamic-gameview-html",
+      "description": "Render dynamic chess game"
+    },
+    {
+      "name": "fetch-chess-puzzle",
+      "description": "Fetches puzzles from Lichess puzzle database, can query by theme or rating"
+    },
+    {
+      "name": "get-puzzle-themes",
+      "description": "gets the puzzle themes"
+    },
+    {
+      "name": "fetch-user-recent-games-from-lichess",
+      "description": "Fetch 20 recent games from Lichess"
+    },
+    {
+      "name": "fetch-lichess-game",
+      "description": "fetch a single lichess game"
+    },
+    {
+      "name": "generate-game-review",
+      "description": "Generate detailed game review dashboard or text version using theme stats"
     }
   ],
   "prompts": [
@@ -98,5 +126,5 @@
     "tactics",
     "engine"
   ],
-  "license": "GPL"
+  "license": "MIT"
 }

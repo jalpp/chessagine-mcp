@@ -10,6 +10,6 @@
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true
   },
-  "include": ["src/**/*"],
+  "include": ["src/**/*", "build/mastra/stockfish-17.1-lite-single-03e3232.js"],
   "exclude": ["node_modules"]
 }

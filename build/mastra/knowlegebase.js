@@ -75,9 +75,7 @@ j. Statics vs. Dynamics - Permanent vs temporary factors
 23. Knight is often stronger than bishop in endgames with pawns on one side.
 
 ### Pawn Structures:
-**Isolated Pawn:** Pawn with no friendly pawns on adjacent files
-- Pros: Open files for pieces, central control
-- Cons: Weakness, requires piece protection
+
 
 **Doubled Pawns:** Two pawns on the same file
 - Pros: May control key squares, semi-open file
@@ -94,6 +92,10 @@ j. Statics vs. Dynamics - Permanent vs temporary factors
 **Pawn Chain:** Diagonal line of pawns supporting each other
 - Pros: Strong structure, space control
 - Cons: Base can be attacked, inflexible
+
+**Isolated Pawn:** Pawn with no friendly pawns on adjacent files
+- Pros: Open files for pieces, central control
+- Cons: Weakness, requires piece protection
 
 ### Major Tactical Motifs:
 - **Pin:** Attacking a piece that cannot move without exposing a more valuable piece
