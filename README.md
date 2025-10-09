@@ -1,5 +1,6 @@
 # ChessAgine MCP
 
+[![smithery badge](https://smithery.ai/badge/@jalpp/chessagine-mcp)](https://smithery.ai/server/@jalpp/chessagine-mcp)
 <p align="center">
   <img src="/icon.png" alt="ChessAgine" width="200"/>
 </p>
@@ -41,6 +42,14 @@ A comprehensive Model Context Protocol (MCP) server that provides advanced chess
 - **Puzzle Themes**: 150+ tactical motifs and patterns
 
 ## Installation
+
+### Installing via Smithery
+
+To install ChessAgine automatically via [Smithery](https://smithery.ai/server/@jalpp/chessagine-mcp):
+
+```bash
+npx -y @smithery/cli install @jalpp/chessagine-mcp
+```
 
 ### Option 1: Using MCPB File (Recommended)
 
