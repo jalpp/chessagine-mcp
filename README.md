@@ -1,3 +1,5 @@
+[![smithery badge](https://smithery.ai/badge/@jalpp/chessagine-mcp)](https://smithery.ai/server/@jalpp/chessagine-mcp)
+
 # ChessAgine MCP
 
 <p align="center">
@@ -11,7 +13,6 @@ A comprehensive Model Context Protocol (MCP) server that provides advanced chess
 <p align="center">
   <img src="/assets/screenshots/claude2.png" alt="ChessAgine"/>
 </p>
-
 
 ## Features
 
@@ -42,7 +43,13 @@ A comprehensive Model Context Protocol (MCP) server that provides advanced chess
 
 ## Installation
 
-### Option 1: Using MCPB File (Recommended)
+### Option 1: Install via Smithery (Recommended)
+
+To install ChessAgine to various MCP clients via [Smithery](https://smithery.ai/server/@jalpp/chessagine-mcp):
+
+
+
+### Option 2: Using MCPB File direct upload to Claude Desktop (Recommended)
 
 Download the `chessagine-mcp.mcpb` file and install it directly in Claude Desktop:
 
@@ -52,7 +59,7 @@ Download the `chessagine-mcp.mcpb` file and install it directly in Claude Deskto
 4. Select the `chessagine-mcp.mcpb` file
 5. Restart Claude Desktop
 
-### Option 2: Local Development Setup
+### Option 3: Local Development Setup
 
 #### Prerequisites
 - Node.js 20+ 
@@ -154,6 +161,8 @@ Analyze how the king safety theme changes in this line: 1.e4 e5 2.f4 exf4 3.Bc4 
 
 ## Available Tools
 
+ChessAgine mcp comes with total of **22** totals, giving LLMs access to ton of chess context making it chess-aware
+
 | Tool | Description |
 |------|-------------|
 | **Position Analysis** |
@@ -190,22 +199,6 @@ Analyze how the king safety theme changes in this line: 1.e4 e5 2.f4 exf4 3.Bc4 
 |--------|-------------|
 | `analyze-position` | Comprehensive positional analysis |
 
-## Puzzle Training Features
-
-ChessAgine MCP now includes access to Lichess's extensive puzzle database with:
-
-- **3+ Million Puzzles**: Tactical problems for all skill levels
-- **150+ Themes**: Fork, pin, skewer, mate patterns, endgames, and more
-- **Rating Filter**: Find puzzles matching your skill level (500-3000+)
-- **Theme Combinations**: Query multiple themes simultaneously
-- **Instant Feedback**: Validate solutions with engine analysis
-
-### Popular Puzzle Themes
-- **Tactical Motifs**: fork, pin, skewer, discoveredAttack, deflection
-- **Checkmate Patterns**: mateIn1, mateIn2, mateIn3, backRankMate, smotheredMate
-- **Endgame Skills**: pawnEndgame, rookEndgame, queenEndgame, promotion
-- **Strategic Elements**: zugzwang, clearance, interference, attraction
-
 ## Game Review System
 
 The new game review system provides comprehensive analysis:
@@ -229,24 +222,15 @@ The server integrates with several chess APIs:
 
 ### Building from Source
 ```bash
-npm run build:mcp  # Build the project
-npm run dev        # Development mode with watch
-npm run clean      # Clean build directory
+npm run build:mcp  # Build the mcpb file
+npm run dev        # Start local smithery
+npm run start      # Start the local stdio server
 ```
-
-## Contributing
-
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
 
 ## Support
 
 - **Discord**: [Join ChessAgine community](https://discord.gg/N2J2sP9yTm)
 - **GitHub Issues**: [Report bugs or request features](https://github.com/jalpp/chessagine-mcp/issues)
-- **Documentation**: [Full documentation](https://github.com/jalpp/chessagine-mcp)
 
 ## License
 
