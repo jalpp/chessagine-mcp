@@ -4,6 +4,7 @@
   "description": "",
   "type": "module",
   "main": "build/mastra/stdio.js",
+  "module": "src/mastra/index.ts",  
   "bin": "build/mastra/stdio.js",
   "exports": {
     ".": {
@@ -13,10 +14,11 @@
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "mastra dev",
+    "build": "smithery build",
+    "dev": "smithery dev",
     "build:mcp": "tsc && chmod +x build/mastra/stdio.js && mcpb pack",
     "debug": "npx @modelcontextprotocol/inspector node build/mastra/stdio.js",
-    "start": "mastra start"
+    "start": "node build/mastra/stdio.js"
   },
   "keywords": [],
   "author": "",
@@ -31,6 +33,7 @@
     "zod": "^3.25.76"
   },
   "devDependencies": {
+    "@smithery/cli": "^1.4.6",
     "@types/node": "^24.5.2",
     "mastra": "^0.13.2",
     "typescript": "^5.9.2"
