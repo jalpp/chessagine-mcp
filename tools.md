@@ -8,6 +8,7 @@
 | `get-theme-progression` | Monitor specific theme development |
 | `compare-variations` | Side-by-side variation analysis |
 | `find-critical-moments` | Identify key turning points |
+| `get-tactical-position-summary` | `Get tactical position summary like hanging pieces, semi protected pieces, forks, pins for the given fen` | 
 | **Engine & Evaluation** |
 | `get-stockfish-analysis` | Deep engine position analysis |
 | `get-stockfish-move-analysis` | Post-move position evaluation |

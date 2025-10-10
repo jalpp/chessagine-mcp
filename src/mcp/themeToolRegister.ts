@@ -5,6 +5,7 @@ import { generateGameReview, formatGameReview } from "../review/gamereview.js";
 import { Color } from "chess.js";
 import { getThemeScores, analyzeVariationThemes, getThemeProgression, compareVariations, findCriticalMoments } from "../review/ovp.js";
 import { validColorSchema } from "../utils/utils.js";
+import { TacticalBoard } from "../themes/tacticalBoard.js";
 
 export function registerThemeCalculationTools(server: McpServer): void {
 
@@ -39,8 +40,39 @@ export function registerThemeCalculationTools(server: McpServer): void {
         }
       }
     );
-    
-    
+
+    server.tool(
+      "get-tactical-position-summary",
+      "Get tactical position summary like hanging pieces, semi protected pieces, forks, pins for the given fen",
+      {
+        fen: fenSchema
+      },
+      async ({ fen}) => {
+        try {
+          
+          const tactics = new TacticalBoard(fen);
+          
+          return {
+            content: [
+              {
+                type: "text",
+                text: JSON.stringify(tactics.toString(), null, 2),
+              },
+            ],
+          };
+        } catch (error) {
+          return {
+            content: [
+              {
+                type: "text",
+                text: `Error getting theme scores:`,
+              },
+            ],
+          };
+        }
+      }
+    );
+
     server.tool(
       "analyze-variation-themes",
       "Analyze how chess themes change across a sequence of moves",
