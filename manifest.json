@@ -1,7 +1,7 @@
 {
   "manifest_version": "0.2",
-  "name": "chessagine-mcp-v0.2",
-  "version": "1.0.4",
+  "name": "chessagine-mcp-v0.3",
+  "version": "1.0.5",
   "description": "Connect to ChessAgine Chess Context Protocol tools, access to stockfish, chess board state, analysis of themes making LLM more chess aware, get access to chessdb, and lichess games.",
   "author": {
     "name": "Jalp",
@@ -16,11 +16,11 @@
   "support": "https://discord.gg/N2J2sP9yTm",
   "server": {
     "type": "node",
-    "entry_point": "/build/mastra/stdio.js",
+    "entry_point": "/build/runner/stdio.js",
     "mcp_config": {
       "command": "node",
       "args": [
-        "${__dirname}/build/mastra/stdio.js"
+        "${__dirname}/build/runner/stdio.js"
       ],
       "env": {}
     }

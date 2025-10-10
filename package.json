@@ -3,9 +3,9 @@
   "version": "1.0.0",
   "description": "",
   "type": "module",
-  "main": "build/mastra/stdio.js",
-  "module": "src/mastra/index.ts",  
-  "bin": "build/mastra/stdio.js",
+  "main": "build/runner/stdio.js",
+  "module": "src/runner/index.ts",
+  "bin": "build/runner/stdio.js",
   "exports": {
     ".": {
       "types": "./dist/stdio.d.ts",
@@ -16,9 +16,9 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "smithery build",
     "dev": "smithery dev",
-    "build:mcp": "tsc && chmod +x build/mastra/stdio.js && mcpb pack",
-    "debug": "npx @modelcontextprotocol/inspector node build/mastra/stdio.js",
-    "start": "node build/mastra/stdio.js"
+    "build:mcp": "tsc && chmod +x build/runner/stdio.js && mcpb pack",
+    "debug": "npx @modelcontextprotocol/inspector node build/runner/stdio.js",
+    "start": "node build/runner/stdio.js"
   },
   "keywords": [],
   "author": "",
@@ -27,15 +27,14 @@
     "node": ">=20.9.0"
   },
   "dependencies": {
-    "@modelcontextprotocol/sdk": "^1.18.2",
+    "@modelcontextprotocol/sdk": "^1.20.0",
     "async-mutex": "^0.5.0",
     "chess.js": "^1.4.0",
     "zod": "^3.25.76"
   },
   "devDependencies": {
     "@smithery/cli": "^1.4.6",
-    "@types/node": "^24.5.2",
-    "mastra": "^0.13.2",
-    "typescript": "^5.9.2"
+    "@types/node": "^24.7.1",
+    "typescript": "^5.9.3"
   }
 }
