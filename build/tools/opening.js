@@ -1,4 +1,3 @@
-// Opening Explorer Functions
 export const getOpeningStats = async (fen) => {
     try {
         const masterEndpoint = `https://explorer.lichess.ovh/masters?fen=${fen}&moves=12&topGames=15`;

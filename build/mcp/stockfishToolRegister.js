@@ -1,14 +1,15 @@
 import { fenSchema, engineDepthSchema, moveSchema } from "../runner/schema.js";
 import { calculateDeep } from "../themes/state.js";
 import { getChessEvaluation, generateChessAnalysis } from "../tools/fish.js";
-import { getChessDbNoteWord } from "../utils/utils.js";
+import { getChessDbNoteWord, validateEngineDepth } from "../utils/utils.js";
 export function registerStockfishTools(server) {
     server.tool("get-stockfish-analysis", "Analyze a given chess position using Stockfish and provide best move, reasoning, and variation, speech Eval and number Eval", {
         fen: fenSchema,
         depth: engineDepthSchema,
     }, async ({ fen, depth }) => {
         try {
-            const evaluation = await getChessEvaluation(fen, depth);
+            const validDepth = validateEngineDepth(depth);
+            const evaluation = await getChessEvaluation(fen, validDepth);
             const result = generateChessAnalysis(evaluation, fen);
             return {
                 content: [

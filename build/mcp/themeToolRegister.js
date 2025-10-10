@@ -1,14 +1,17 @@
 import z from "zod";
-import { fenSchema, gamePgnSchema } from "../runner/schema.js";
+import { fenSchema, gamePgnSchema, sideSchema } from "../runner/schema.js";
 import { generateGameReview, formatGameReview } from "../review/gamereview.js";
 import { getThemeScores, analyzeVariationThemes, getThemeProgression, compareVariations, findCriticalMoments } from "../review/ovp.js";
+import { validColorSchema } from "../utils/utils.js";
+import { TacticalBoard } from "../themes/tacticalBoard.js";
 export function registerThemeCalculationTools(server) {
     server.tool("get-theme-scores", "Get chess theme scores (material, mobility, space, positional, king safety) for a given position fen and the side to eval from", {
         fen: fenSchema,
-        color: z.enum(["w", "b"]).describe("Side to evaluate from"),
+        color: sideSchema,
     }, async ({ fen, color }) => {
         try {
-            const result = getThemeScores(fen, color); // need to validate the color schema
+            const validColor = validColorSchema(color);
+            const result = getThemeScores(fen, validColor);
             return {
                 content: [
                     {
@@ -29,13 +32,39 @@ export function registerThemeCalculationTools(server) {
             };
         }
     });
+    server.tool("get-tactical-position-summary", "Get tactical position summary like hanging pieces, semi protected pieces, forks, pins for the given fen", {
+        fen: fenSchema
+    }, async ({ fen }) => {
+        try {
+            const tactics = new TacticalBoard(fen);
+            return {
+                content: [
+                    {
+                        type: "text",
+                        text: JSON.stringify(tactics.toString(), null, 2),
+                    },
+                ],
+            };
+        }
+        catch (error) {
+            return {
+                content: [
+                    {
+                        type: "text",
+                        text: `Error getting theme scores:`,
+                    },
+                ],
+            };
+        }
+    });
     server.tool("analyze-variation-themes", "Analyze how chess themes change across a sequence of moves", {
         rootFen: fenSchema,
         moves: z.array(z.string()).describe("Array of moves in algebraic notation"),
-        color: z.enum(["w", "b"]).describe("Side to evaluate from"),
+        color: sideSchema,
     }, async ({ rootFen, moves, color }) => {
         try {
-            const result = analyzeVariationThemes(rootFen, moves, color);
+            const validColor = validColorSchema(color);
+            const result = analyzeVariationThemes(rootFen, moves, validColor);
             return {
                 content: [
                     {
@@ -59,7 +88,7 @@ export function registerThemeCalculationTools(server) {
     server.tool("get-theme-progression", "Get the progression of a specific chess theme over a variation", {
         rootFen: fenSchema,
         moves: z.array(z.string()).describe("Array of moves in algebraic notation"),
-        color: z.enum(["w", "b"]).describe("Side to evaluate from"),
+        color: sideSchema,
         theme: z.enum([
             "material",
             "mobility",
@@ -69,7 +98,8 @@ export function registerThemeCalculationTools(server) {
         ]).describe("Theme to track"),
     }, async ({ rootFen, moves, color, theme }) => {
         try {
-            const result = getThemeProgression(rootFen, moves, color, theme);
+            const validColor = validColorSchema(color);
+            const result = getThemeProgression(rootFen, moves, validColor, theme);
             return {
                 content: [
                     {
@@ -96,10 +126,11 @@ export function registerThemeCalculationTools(server) {
             name: z.string(),
             moves: z.array(z.string()),
         })).describe("Array of variations to compare"),
-        color: z.enum(["w", "b"]).describe("Side to evaluate from"),
+        color: sideSchema,
     }, async ({ rootFen, variations, color }) => {
         try {
-            const result = compareVariations(rootFen, variations, color);
+            const validColor = validColorSchema(color);
+            const result = compareVariations(rootFen, variations, validColor);
             return {
                 content: [
                     {
@@ -123,11 +154,12 @@ export function registerThemeCalculationTools(server) {
     server.tool("find-critical-moments", "Find moves in a chess variation where there are significant theme changes", {
         rootFen: fenSchema,
         moves: z.array(z.string()).describe("Array of moves in algebraic notation"),
-        color: z.enum(["w", "b"]).describe("Side to evaluate from"),
+        color: sideSchema,
         threshold: z.number().optional().default(0.5).describe("Threshold for significant changes"),
     }, async ({ rootFen, moves, color, threshold = 0.5 }) => {
         try {
-            const result = findCriticalMoments(rootFen, moves, color, threshold);
+            const validColor = validColorSchema(color);
+            const result = findCriticalMoments(rootFen, moves, validColor, threshold);
             return {
                 content: [
                     {

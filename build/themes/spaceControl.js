@@ -16,7 +16,7 @@ function getFlankSpaceControl(chess, side) {
 }
 export function getSideSpaceControl(chess, side) {
     const centre = getSpaceControl(chess, side);
-    const flank = getSpaceControl(chess, side);
+    const flank = getFlankSpaceControl(chess, side);
     return {
         centerspacecontrolscore: centre,
         flankspacecontrolscore: flank,
