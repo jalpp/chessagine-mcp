@@ -1,14 +1,8 @@
 import { Chess} from 'chess.js';
 import { getBoardState } from "../themes/state.js"
 import { PositionPrompter } from "../themes/positionPrompter.js";
+import { StockfishResponse } from '../types/types.js';
 
-export interface StockfishResponse {
-    success: boolean;
-    evaluation: number | null;
-    mate: string | null;
-    bestmove: string;
-    continuation: string;
-}
 
 export const getChessEvaluation = async (fen: string, depth: number) => {
     const stockfishUrl = `https://stockfish.online/api/s/v2.php?fen=${fen}&depth=${depth}`;
@@ -63,9 +57,4 @@ export const generateChessAnalysis = (data: StockfishResponse, fen: string) => {
     };
 };
 
-export interface HangingPieceAnalysis {
-    hangingPieces: string[];
-    unprotectedPieces: string[];
-    semiProtectedPieces: string[];
-}
 

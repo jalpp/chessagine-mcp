@@ -7,17 +7,18 @@ import { getThemeScores, analyzeVariationThemes, getThemeProgression, compareVar
 import { validColorSchema } from "../utils/utils.js";
 
 export function registerThemeCalculationTools(server: McpServer): void {
+
     server.tool(
       "get-theme-scores",
       "Get chess theme scores (material, mobility, space, positional, king safety) for a given position fen and the side to eval from",
       {
         fen: fenSchema,
-        color: z.enum(["w", "b"]).describe("Side to evaluate from"),
+        color: sideSchema,
       },
       async ({ fen, color }) => {
         try {
           const validColor = validColorSchema(color);  
-          const result = getThemeScores(fen, validColor as Color); // need to validate the color schema
+          const result = getThemeScores(fen, validColor as Color); 
           return {
             content: [
               {
@@ -46,7 +47,7 @@ export function registerThemeCalculationTools(server: McpServer): void {
       {
         rootFen: fenSchema,
         moves: z.array(z.string()).describe("Array of moves in algebraic notation"),
-        color: z.enum(["w", "b"]).describe("Side to evaluate from"),
+        color: sideSchema,
       },
       async ({ rootFen, moves, color }) => {
         try {

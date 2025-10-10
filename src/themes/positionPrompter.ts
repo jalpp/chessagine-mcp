@@ -178,7 +178,10 @@ export class PositionPrompter {
     this.sections.push("</piece_positions>");
   }
 
-  private addPlayerPiecePositions(color: string, placement: SidePiecePlacement): void {
+  private addPlayerPiecePositions(
+    color: string,
+    placement: SidePiecePlacement
+  ): void {
     this.sections.push(`${color} PIECE LOCATIONS:`);
     this.sections.push(`  King: ${placement.kingplacement[0] || "MISSING"}`);
     this.sections.push(

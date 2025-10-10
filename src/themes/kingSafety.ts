@@ -46,7 +46,7 @@ export function calculatePawnShield(chess: Chess, kingSquare: Square, side: Colo
   
   let pawnShield = 0;
   
-  // Check squares in front of king
+  
   for (let fileOffset = -1; fileOffset <= 1; fileOffset++) {
     const file = kingFile + fileOffset;
     if (file < 0 || file > 7) continue;
@@ -59,7 +59,7 @@ export function calculatePawnShield(chess: Chess, kingSquare: Square, side: Colo
       const piece = chess.get(square);
       
       if (piece && piece.type === PAWN && piece.color === side) {
-        pawnShield += rankOffset === 1 ? 2 : 1; // Closer pawns worth more
+        pawnShield += rankOffset === 1 ? 2 : 1; 
       }
     }
   }

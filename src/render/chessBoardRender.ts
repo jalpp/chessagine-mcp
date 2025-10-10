@@ -1,4 +1,3 @@
-import { Chess } from "chess.js";
 
 export const viewBoardArtifact = `
 <!DOCTYPE html>

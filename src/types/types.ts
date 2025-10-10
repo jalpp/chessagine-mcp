@@ -133,3 +133,56 @@ export interface BoardState {
   gamePhase: 'opening' | 'middlegame' | 'endgame';
 }
 
+
+interface Opening {
+  eco: string;
+  name: string;
+}
+
+interface Side {
+  name: string;
+  rating: number;
+}
+
+interface Game {
+  uci: string;
+  id: string;
+  black: Side;
+  white: Side;
+  year: number;
+  month: string;
+}
+
+export interface Moves {
+  uci: string;
+  san: string;
+  averageRating: number;
+  white: number;
+  draws: number;
+  black: number;
+  game: Game;
+  opening: Opening;
+}
+
+export interface MasterGames {
+  opening: Opening;
+  white: number;
+  draws: number;
+  black: number;
+  moves: Moves[];
+  topGames: Game[];
+}
+
+export interface HangingPieceAnalysis {
+    hangingPieces: string[];
+    unprotectedPieces: string[];
+    semiProtectedPieces: string[];
+}
+
+export interface StockfishResponse {
+    success: boolean;
+    evaluation: number | null;
+    mate: string | null;
+    bestmove: string;
+    continuation: string;
+}

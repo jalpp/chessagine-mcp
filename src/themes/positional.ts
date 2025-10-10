@@ -31,24 +31,22 @@ function getPassedPawnCount(chess: Chess, side: Color): number {
   for (const pawnSquare of myPawns) {
     const file = pawnSquare[0];
     const rank = parseInt(pawnSquare[1]);
-    const direction = side === WHITE ? 1 : -1;
-    
+  
     let isPassed = true;
     
-    // Check if any enemy pawns block this pawn's path or can capture it
+    
     for (const enemyPawn of enemyPawns) {
       const enemyFile = enemyPawn[0];
       const enemyRank = parseInt(enemyPawn[1]);
       
-      // Check same file and adjacent files (capture squares)
+      
       const fileDiff = Math.abs(enemyFile.charCodeAt(0) - file.charCodeAt(0));
       if (fileDiff <= 1) {
-        // For white pawns, enemy pawns ahead block the path
         if (side === WHITE && enemyRank > rank) {
           isPassed = false;
           break;
         }
-        // For black pawns, enemy pawns behind (lower rank) block the path  
+          
         else if (side === BLACK && enemyRank < rank) {
           isPassed = false;
           break;

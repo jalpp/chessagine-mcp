@@ -1,51 +1,5 @@
 import { Chess } from "chess.js";
 
-export function getChessDbNoteWord(note: string): string {
-  switch(note){
-    case "!":
-      return "Best";
-    case "*": 
-      return "Good";
-    case "?": 
-      return "Bad"; 
-    default:
-      return "unknown";     
-  }
-}
-
-export function collectFensFromGame(pgn: string): string[]{
-  const fens: string[] = [];
-
-  const chess = new Chess();
-
-  chess.loadPgn(pgn);
-
-  const history = chess.history({verbose: true});
-
-  for(let i = 0; i < history.length; i++){
-    fens[i] = history[i].after;
-  }
-
-  return fens;
-}
-
-export function validColorSchema(color: string): string {
-    if(color === "white") return "w";
-    if(color === "black") return "b"
-    if(color === "w") return color;
-    if(color === "b") return color;
-
-    return "w";
-}
-
-export function validateEngineDepth(depth: number): number {
-  if(depth < 12 || depth > 15){
-     return 15;
-  }
-
-  return depth;
-}
-
 export  const PROMPT_CATEGORIES = {
   quickPosition: {
     name: "Quick Position Analysis",
@@ -127,3 +81,51 @@ export  const PROMPT_CATEGORIES = {
     ]
   }
 };
+
+
+export function getChessDbNoteWord(note: string): string {
+  switch(note){
+    case "!":
+      return "Best";
+    case "*": 
+      return "Good";
+    case "?": 
+      return "Bad"; 
+    default:
+      return "unknown";     
+  }
+}
+
+export function collectFensFromGame(pgn: string): string[]{
+  const fens: string[] = [];
+
+  const chess = new Chess();
+
+  chess.loadPgn(pgn);
+
+  const history = chess.history({verbose: true});
+
+  for(let i = 0; i < history.length; i++){
+    fens[i] = history[i].after;
+  }
+
+  return fens;
+}
+
+export function validColorSchema(color: string): string {
+    if(color === "white") return "w";
+    if(color === "black") return "b"
+    if(color === "w") return color;
+    if(color === "b") return color;
+
+    return "w";
+}
+
+export function validateEngineDepth(depth: number): number {
+  if(depth < 12 || depth > 15){
+     return 15;
+  }
+
+  return depth;
+}
+
