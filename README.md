@@ -43,7 +43,7 @@ A comprehensive Model Context Protocol (MCP) server that provides advanced chess
 
 ## Installation
 
-### Installing via Smithery
+### Option 0: Installing via Smithery
 
 To install ChessAgine automatically via [Smithery](https://smithery.ai/server/@jalpp/chessagine-mcp):
 
@@ -72,7 +72,7 @@ Download the `chessagine-mcp.mcpb` file and install it directly in Claude Deskto
 git clone https://github.com/jalpp/chessagine-mcp.git
 cd chessagine-mcp
 npm install
-npm run build
+npm run build:mcp
 ```
 
 #### Configure Claude Desktop
@@ -84,7 +84,7 @@ Add to your `claude_desktop_config.json`:
   "mcpServers": {
     "chessagine-mcp": {
       "command": "node",
-      "args": ["/absolute/path/to/chessagine-mcp/build/mastra/stdio.js"]
+      "args": ["/absolute/path/to/chessagine-mcp/build/runner/stdio.js"]
     }
   }
 }
@@ -96,11 +96,15 @@ Add to your `claude_desktop_config.json`:
   "mcpServers": {
     "chessagine-mcp": {
       "command": "node", 
-      "args": ["C:\\absolute\\path\\to\\chessagine-mcp\\build\\mastra\\stdio.js"]
+      "args": ["C:\\absolute\\path\\to\\chessagine-mcp\\build\\runner\\stdio.js"]
     }
   }
 }
 ```
+
+### Easy setup
+
+Follow Option 1 and upload the generated mcpb file to Claude Desktop directly.
 
 ## Usage Examples
 
@@ -161,112 +165,26 @@ Compare these variations from the starting position:
 Analyze how the king safety theme changes in this line: 1.e4 e5 2.f4 exf4 3.Bc4 Qh4+ 4.Kf1
 ```
 
-## Available Tools
+## Tools & Credits
 
-| Tool | Description |
-|------|-------------|
-| **Position Analysis** |
-| `get-theme-scores` | Analyze positional themes for strategic evaluation |
-| `analyze-variation-themes` | Track theme evolution across move sequences |
-| `get-theme-progression` | Monitor specific theme development |
-| `compare-variations` | Side-by-side variation analysis |
-| `find-critical-moments` | Identify key turning points |
-| **Engine & Evaluation** |
-| `get-stockfish-analysis` | Deep engine position analysis |
-| `get-stockfish-move-analysis` | Post-move position evaluation |
-| `is-legal-move` | Move validation |
-| `boardstate-to-prompt` | Convert positions to text descriptions |
-| **Knowledge & Database** |
-| `get-chess-knowledgebase` | Access comprehensive chess knowledge |
-| `get-lichess-master-games` | Master game database queries |
-| `get-lichess-games` | User game statistics |
-| `get-chessdb-analysis` | ChessDB position analysis |
-| **Visualization** |
-| `generate-chess-board-view-artifact-using-html` | Render chess board in HTML |
-| `generate-dynamic-gameview-html` | Create interactive game viewer |
-| **Puzzle Training** |
-| `fetch-chess-puzzle` | Fetch puzzles from Lichess (filter by theme/rating) |
-| `get-puzzle-themes` | List all available puzzle themes |
-| **Game Analysis** |
-| `fetch-lichess-games` | Fetch user's 20 most recent games |
-| `fetch-lichess-game` | Fetch specific game by URL or ID |
-| `generate-game-review` | Generate detailed game review with themes |
-| `parse-pgn-into-fens` | Convert PGN to FEN position list |
-
-## Available Prompts
-
-| Prompt | Description |
-|--------|-------------|
-| `analyze-position` | Comprehensive positional analysis |
-
-## Puzzle Training Features
-
-ChessAgine MCP now includes access to Lichess's extensive puzzle database with:
-
-- **3+ Million Puzzles**: Tactical problems for all skill levels
-- **150+ Themes**: Fork, pin, skewer, mate patterns, endgames, and more
-- **Rating Filter**: Find puzzles matching your skill level (500-3000+)
-- **Theme Combinations**: Query multiple themes simultaneously
-- **Instant Feedback**: Validate solutions with engine analysis
-
-### Popular Puzzle Themes
-- **Tactical Motifs**: fork, pin, skewer, discoveredAttack, deflection
-- **Checkmate Patterns**: mateIn1, mateIn2, mateIn3, backRankMate, smotheredMate
-- **Endgame Skills**: pawnEndgame, rookEndgame, queenEndgame, promotion
-- **Strategic Elements**: zugzwang, clearance, interference, attraction
-
-## Game Review System
-
-The new game review system provides comprehensive analysis:
-
-- **Theme Progression**: Track material, mobility, space, positional play, and king safety
-- **Critical Moments**: Automatically identify turning points in the game
-- **Visual Analytics**: Generate charts and graphs of theme evolution
-- **Format Options**: JSON data or human-readable text reports
-- **Configurable Threshold**: Adjust sensitivity for detecting critical moments
-
-## API Integration
-
-The server integrates with several chess APIs:
-- **Lichess Explorer API**: Opening statistics and master games
-- **Lichess Puzzle API**: Tactical puzzle database with 3M+ positions
-- **Lichess Game API**: User game history and specific game fetching
-- **ChessDB API**: Position analysis and move databases
-- **Stockfish API**: Engine evaluation and analysis
+See ```tools.md``` for detailed breakdown on tools and their descriptions
 
 ## Development
 
-### Building from Source
+### Dev commands
+
 ```bash
-npm run build:mcp  # Build the project
-npm run dev        # Development mode with watch
-npm run clean      # Clean build directory
+npm run build:mcp  # Build the projects and mcpb file
+npm run dev        # test and interact with chessAgine via smithery
+npm run debug      # opens MCP inspector to inspect new changes made
 ```
 
-## Contributing
-
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
-
-## Support
-
+## Community
 - **Discord**: [Join ChessAgine community](https://discord.gg/N2J2sP9yTm)
-- **GitHub Issues**: [Report bugs or request features](https://github.com/jalpp/chessagine-mcp/issues)
-- **Documentation**: [Full documentation](https://github.com/jalpp/chessagine-mcp)
 
 ## License
 
 This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
-
-## Acknowledgments
-
-- **Stockfish**: The powerful chess engine powering analysis
-- **Lichess**: Open-source chess platform providing game data and puzzles
-- **ChessDB**: Comprehensive chess position database
-- **Anthropic**: Model Context Protocol specification and tools
 
 ## Authors
 @jalpp
