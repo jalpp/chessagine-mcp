@@ -1,9 +1,10 @@
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import z from "zod";
-import { fenSchema, gamePgnSchema } from "../runner/schema.js";
+import { fenSchema, gamePgnSchema, sideSchema } from "../runner/schema.js";
 import { generateGameReview, formatGameReview } from "../review/gamereview.js";
 import { Color } from "chess.js";
 import { getThemeScores, analyzeVariationThemes, getThemeProgression, compareVariations, findCriticalMoments } from "../review/ovp.js";
+import { validColorSchema } from "../utils/utils.js";
 
 export function registerThemeCalculationTools(server: McpServer): void {
     server.tool(
@@ -15,7 +16,8 @@ export function registerThemeCalculationTools(server: McpServer): void {
       },
       async ({ fen, color }) => {
         try {
-          const result = getThemeScores(fen, color as Color); // need to validate the color schema
+          const validColor = validColorSchema(color);  
+          const result = getThemeScores(fen, validColor as Color); // need to validate the color schema
           return {
             content: [
               {
@@ -48,7 +50,8 @@ export function registerThemeCalculationTools(server: McpServer): void {
       },
       async ({ rootFen, moves, color }) => {
         try {
-          const result = analyzeVariationThemes(rootFen, moves, color as Color);
+          const validColor = validColorSchema(color);
+          const result = analyzeVariationThemes(rootFen, moves, validColor as Color);
           return {
             content: [
               {
@@ -77,7 +80,7 @@ export function registerThemeCalculationTools(server: McpServer): void {
       {
         rootFen: fenSchema,
         moves: z.array(z.string()).describe("Array of moves in algebraic notation"),
-        color: z.enum(["w", "b"]).describe("Side to evaluate from"),
+        color: sideSchema,
         theme: z.enum([
           "material",
           "mobility", 
@@ -88,7 +91,8 @@ export function registerThemeCalculationTools(server: McpServer): void {
       },
       async ({ rootFen, moves, color, theme }) => {
         try {
-          const result = getThemeProgression(rootFen, moves, color as Color, theme);
+          const validColor = validColorSchema(color);  
+          const result = getThemeProgression(rootFen, moves, validColor as Color, theme);
           return {
             content: [
               {
@@ -121,11 +125,12 @@ export function registerThemeCalculationTools(server: McpServer): void {
             moves: z.array(z.string()),
           })
         ).describe("Array of variations to compare"),
-        color: z.enum(["w", "b"]).describe("Side to evaluate from"),
+        color: sideSchema,
       },
       async ({ rootFen, variations, color }) => {
         try {
-          const result = compareVariations(rootFen, variations, color as Color);
+          const validColor = validColorSchema(color);  
+          const result = compareVariations(rootFen, variations, validColor as Color);
           return {
             content: [
               {
@@ -154,12 +159,13 @@ export function registerThemeCalculationTools(server: McpServer): void {
       {
         rootFen: fenSchema,
         moves: z.array(z.string()).describe("Array of moves in algebraic notation"),
-        color: z.enum(["w", "b"]).describe("Side to evaluate from"),
+        color: sideSchema,
         threshold: z.number().optional().default(0.5).describe("Threshold for significant changes"),
       },
       async ({ rootFen, moves, color, threshold = 0.5 }) => {
         try {
-          const result = findCriticalMoments(rootFen, moves, color as Color, threshold);
+          const validColor = validColorSchema(color);  
+          const result = findCriticalMoments(rootFen, moves, validColor as Color, threshold);
           return {
             content: [
               {

@@ -2,7 +2,7 @@ import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { fenSchema, engineDepthSchema, moveSchema } from "../runner/schema.js";
 import { calculateDeep } from "../themes/state.js";
 import { getChessEvaluation, generateChessAnalysis } from "../tools/fish.js";
-import { getChessDbNoteWord } from "../utils/utils.js";
+import { getChessDbNoteWord, validateEngineDepth } from "../utils/utils.js";
 
 export function registerStockfishTools(server: McpServer): void {
     server.tool(
@@ -14,7 +14,8 @@ export function registerStockfishTools(server: McpServer): void {
       },
       async ({ fen, depth }) => {
         try {
-          const evaluation = await getChessEvaluation(fen, depth);
+          const validDepth = validateEngineDepth(depth);
+          const evaluation = await getChessEvaluation(fen, validDepth);
           const result = generateChessAnalysis(evaluation, fen);
           return {
             content: [
