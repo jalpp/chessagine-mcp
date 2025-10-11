@@ -1,6 +1,6 @@
 import z from "zod";
-import { server } from "./server.js";
 import { registerAgine } from "../mcp/registerAgine.js";
+import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 
 
 
@@ -13,9 +13,18 @@ export default function createServer({
 	config: z.infer<typeof configSchema> 
 }) {
 
-  console.log("using config ", config);
+  const Mcpserver = new McpServer({
+    name: "chessagine-mcp",
+    version: "1.0.0",
+    capabilities: {
+      resources: {},
+      tools: {},
+    },
+  });
 
-  registerAgine(server);
+  console.warn(config);
+
+  registerAgine(Mcpserver);
   
-  return server.server; 
+  return Mcpserver.server; 
 }
