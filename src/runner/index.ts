@@ -15,8 +15,7 @@ export default function createServer({
 
   console.log("using config ", config);
 
-  const smithServer = server;
-  registerAgine(smithServer);
+  registerAgine(server);
   
-  return smithServer.server; 
+  return server.server; 
 }

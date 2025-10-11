@@ -6,7 +6,6 @@ export const configSchema = z.object({
 });
 export default function createServer({ config, }) {
     console.log("using config ", config);
-    const smithServer = server;
-    registerAgine(smithServer);
-    return smithServer.server;
+    registerAgine(server);
+    return server.server;
 }
