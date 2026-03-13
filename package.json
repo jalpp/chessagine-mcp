@@ -35,7 +35,7 @@
     "@jalpp/mcp-adapter": "^0.3.1",
     "@mliebelt/pgn-viewer": "^1.6.11",
     "@modelcontextprotocol/ext-apps": "^1.2.2",
-    "@modelcontextprotocol/sdk": "^1.25.2",
+    "@modelcontextprotocol/sdk": "^1.26.0",
     "@vitejs/plugin-react": "^5.2.0",
     "axios": "^1.13.5",
     "chess.js": "^1.4.0",
