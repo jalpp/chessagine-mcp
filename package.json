@@ -45,7 +45,7 @@
     "react": "^19.2.6",
     "react-chessboard": "^5.10.0",
     "react-dom": "^19.2.6",
-    "vite": "^8.0.11",
+    "vite": "^8.0.16",
     "vite-plugin-singlefile": "^2.3.3",
     "void57-chess": "^1.0.4",
     "zod": "^3.25.76"
