@@ -1,0 +1,47 @@
+# Only build/runner/stdio.js and its runtime deps ship in the .mcpb.
+# Everything below is either a build-time-only tool (vite/react/pgn-viewer UI
+# bundling) or belongs to the separate HTTP/Vercel remote server
+# (src/runner/remote.ts), and is never imported by the stdio entry point.
+
+# UI/build tooling (bundled into dist/*.html by `vite build` beforehand)
+node_modules/@mliebelt/**
+node_modules/@fortawesome/**
+node_modules/@vitejs/**
+node_modules/vite/**
+node_modules/vite-plugin-singlefile/**
+node_modules/rolldown/**
+node_modules/react/**
+node_modules/react-dom/**
+node_modules/react-chessboard/**
+node_modules/chessground/**
+node_modules/void57-chess/**
+node_modules/typesafe-i18n/**
+
+# Remote/Vercel HTTP server only (src/runner/remote.ts) - not used by stdio.js
+node_modules/express/**
+node_modules/cors/**
+node_modules/mcp-handler/**
+node_modules/redis/**
+node_modules/@redis/**
+
+# Dev/type-check tooling
+node_modules/typescript/**
+node_modules/ts-node/**
+node_modules/nodemon/**
+node_modules/@types/**
+node_modules/@cspotcode/**
+
+# Misc build sources not needed at runtime (anchored to project root only -
+# unanchored patterns like "src/" would also match nested paths inside
+# node_modules, e.g. @modelcontextprotocol/ext-apps/dist/src/, breaking imports)
+/ui/
+/src/
+/tsconfig.json
+/vite.config.ts
+/package-lock.json
+/preview.png
+/chess-board.html
+/pgn-viewer.html
+
+# Force-include the built UI HTML even though .gitignore excludes dist/
+!dist/**
