@@ -25,6 +25,7 @@ This is currently the most stable way to connect ChessAgine MCP to Claude Deskto
 #### Prerequisites
 - Node.js 22+
 - npm or yarn package manager
+- Anthropic MCP Bundle CLI (npm install -g @anthropic-ai/mcpb)
 
 #### Clone and Setup
 ```bash
@@ -36,7 +37,13 @@ npm run build
 
 #### Configure Claude Desktop
 
-Add to `~/Library/Application Support/Claude/claude_desktop_config.json` (macOS), `%APPDATA%\Claude\claude_desktop_config.json` (Windows), or `~/.config/Claude/claude_desktop_config.json` (Linux):
+# MacOs
+Add to `~/Library/Application Support/Claude/claude_desktop_config.json`
+#Windows
+Run `(Get-AppxPackage *Claude*).PackageFamilyName` to find the virtualized Claude Desktop folder
+Add to `%LOCALAPPDATA%\Packages\Claude_virtualized_folder\LocalCache\Roaming\Claude\claude_desktop_config.json`
+# Linux 
+Add to `~/.config/Claude/claude_desktop_config.json` 
 
 **macOS/Linux:**
 ```json

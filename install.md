@@ -66,17 +66,19 @@ This produces `build/runner/stdio.js`. Every "local" config below points at the 
 
 ## API keys / optional credentials
 
-ChessAgine MCP works with zero configuration, but a few tools support (or require) personal API keys for services beyond Stockfish/ChessDB, which are all key-free:
+ChessAgine MCP works with zero configuration, but three tools/tool-groups support personal API keys for services beyond Stockfish/ChessDB, which are all key-free: Lichess explorer/games/studies tools, ChessBoard Magic tools, and Posira tools. **How you supply a key depends on whether you're running the local stdio server or using the hosted remote server** — the two behave differently on purpose.
 
-| Env var | Used by | Required? |
-|---|---|---|
-| `LICHESS_API_TOKEN` | Lichess explorer/games/studies tools (`get-lichess-master-games`, `get-lichess-games`, `fetch-lichess-games`, `fetch-lichess-studies`, `fetch-lichess-study-pgn`) | Optional server-side default, used only if it's set. Every one of these tools also accepts an optional `token` argument per call, which takes priority over the env var — pass your own PAT in conversation if you want to use a different token than the server default (e.g. to read private studies). |
-| `CHESSBOARD_MAGIC_PAT` | ChessBoard Magic tools (repertoires, games, TCEC stats, etc.) | Optional server-side default. Every ChessBoard Magic tool also accepts an optional `token` argument per call — if you pass your own PAT in the conversation/tool call, it's used instead of the env var. |
-| `POSIRA_API_KEY` | `get-posira-explorer`, `get-posira-health` | Currently **env-only** — these two tools have no per-call token argument yet, so a personal key can only be supplied via this env var today (see the note in [Troubleshooting](#troubleshooting)). |
+### Local (stdio) server: env vars
 
-Lichess *usernames* (as opposed to tokens) are always passed as a normal tool argument (e.g. `fetch-lichess-games`, `fetch-lichess-studies` both take `username` directly) — just tell the agent your Lichess username in conversation. There is no `LICHESS_USERNAME` env var; an older `get-lichess-username` tool that read one has been removed, since it only ever returned a single hardcoded server-side value with no way to personalize it, and every other Lichess tool that needs a username already takes it as an argument.
+The local server reads credentials from environment variables, same as always:
 
-### Setting env vars for a local (stdio) server
+| Env var | Used by |
+|---|---|
+| `LICHESS_API_TOKEN` | `get-lichess-master-games`, `get-lichess-games`, `fetch-lichess-games`, `fetch-lichess-studies`, `fetch-lichess-study-pgn` |
+| `CHESSBOARD_MAGIC_PAT` | All ChessBoard Magic tools (repertoires, games, TCEC stats, etc.) |
+| `POSIRA_API_KEY` | `get-posira-explorer`, `get-posira-health` |
+
+Every one of these tools also accepts an optional `token` argument per call, which takes priority over the env var — pass your own token in conversation if you want to use something other than the server's default (e.g. to read private Lichess studies).
 
 Add an `"env"` object next to `"command"`/`"args"` in any client's local config from this guide. For example, in Claude Desktop's `claude_desktop_config.json`:
 
@@ -113,13 +115,54 @@ mcpServers:
 
 Restart the client after adding env vars, same as any other config change.
 
-### Env vars and the hosted remote server
+### Remote (hosted) server: HTTP headers, not env vars
 
-The hosted server at `https://chessagine-mcp.vercel.app/mcp` is a single shared deployment — any env vars set there apply globally to every user connecting to it, not per-user. In practice:
+The hosted server at `https://chessagine-mcp.vercel.app/mcp` (and any Vercel/Express deployment built from `api/mcp.ts` / `src/runner/remote.ts`) intentionally has **no server-side credentials of its own** — it never reads `LICHESS_API_TOKEN`, `CHESSBOARD_MAGIC_PAT`, or `POSIRA_API_KEY` from its environment. Since it's a single shared deployment used by many people at once, there's no safe "server default" to fall back to; every caller supplies their own.
 
-- For `LICHESS_API_TOKEN`- and `CHESSBOARD_MAGIC_PAT`-backed tools, pass your own token/PAT as the `token` tool argument in conversation instead of relying on the shared server's env var.
-- For `POSIRA_API_KEY`-backed tools, there is currently no per-call override — see [Troubleshooting](#troubleshooting).
-- If you deploy your own fork to Vercel (see the main README's "Deploy your own instance" section), you can set your own env vars under your Vercel project's **Settings → Environment Variables**, which then apply to everyone using *your* deployment.
+There are two ways to supply a token to the remote server, and **the header always wins if both are present for the same call**:
+
+| Header | Service |
+|---|---|
+| `X-Lichess-Token` | Lichess explorer/games/studies tools |
+| `X-Chessboardmagic-Token` | ChessBoard Magic tools |
+| `X-Posira-Token` | Posira tools |
+
+1. **A static per-server header (recommended)** — set once in your client's MCP server config, the same way you'd set an `env` block for a local server. This is the same mechanism popular hosted MCP servers (Linear, Asana, etc.) use for Bearer tokens; ChessAgine uses three separate headers instead of one `Authorization` header because it proxies three independent services. The token never enters the conversation or the model's context this way.
+2. **The tool's `token` argument (fallback)** — if a header wasn't set for a given service, every tool above still accepts a `token` argument, same as the local server. Tell the agent your token in conversation and it'll pass it along per call. Use this if your client doesn't support setting custom static headers.
+
+Example for a client with a JSON `mcpServers` config that supports `headers` (Cursor, Windsurf, Cline, VS Code, Zed via `mcp-remote`, etc. — see each client's section below):
+
+```json
+{
+  "mcpServers": {
+    "chessagine-mcp": {
+      "url": "https://chessagine-mcp.vercel.app/mcp",
+      "headers": {
+        "X-Lichess-Token": "your-lichess-api-token",
+        "X-Chessboardmagic-Token": "your-chessboardmagic-pat",
+        "X-Posira-Token": "your-posira-api-key"
+      }
+    }
+  }
+}
+```
+
+For LibreChat's `librechat.yaml`, add the same three entries under `headers:` on the server, e.g.:
+
+```yaml
+mcpServers:
+  chessagine-mcp:
+    type: streamable-http
+    url: https://chessagine-mcp.vercel.app/mcp
+    headers:
+      X-Lichess-Token: your-lichess-api-token
+      X-Chessboardmagic-Token: your-chessboardmagic-pat
+      X-Posira-Token: your-posira-api-key
+```
+
+Omit whichever headers you don't need — each is independent, and any tool with neither a header nor a `token` argument for its service just makes an unauthenticated request (which is fine for the Lichess/CBM/Posira endpoints that don't strictly require a key).
+
+If you deploy your own fork to Vercel (see the main README's "Deploy your own instance" section), this same header-first design still applies to your deployment — there's no way to configure a shared server-side default even for a self-hosted fork, by design. If you want a private single-user deployment with a fixed key baked in, use the local stdio server instead.
 
 ## Claude Desktop
 
@@ -594,4 +637,5 @@ Consult your specific client's docs for where this JSON snippet (or equivalent "
 - **MCPB extension won't install or crashes on load** — this install path is currently less stable than the config-file method; use [Option 1](#option-1-config-file-recommended-most-reliable) instead.
 - **CORS / browser-based client errors** — the deployed server already sends permissive CORS headers (`Access-Control-Allow-Origin: *`) and allows `Mcp-Session-Id`, `Authorization`, and `Content-Type` headers, so this shouldn't be the cause; double-check the exact URL first.
 - **No tools show up after connecting** — ask the assistant to "list available tools" or render a chessboard; some clients lazily fetch the tool list on first use.
-- **Self-hosting your own copy** — fork this repo, import it at [vercel.com/new](https://vercel.com/new), deploy with no environment variables, and use `https://your-project.vercel.app/mcp` in place of the URL throughout this doc.
+- **Lichess/ChessBoard Magic/Posira tools return unauthenticated/rate-limited results on the remote server** — the hosted server has no credentials of its own; set `X-Lichess-Token` / `X-Chessboardmagic-Token` / `X-Posira-Token` as static headers in your client's server config (see [API keys / optional credentials](#api-keys--optional-credentials)), or pass a `token` argument in conversation if your client can't set custom headers.
+- **Self-hosting your own copy** — fork this repo, import it at [vercel.com/new](https://vercel.com/new), deploy with no environment variables, and use `https://your-project.vercel.app/mcp` in place of the URL throughout this doc. Your fork still won't have server-side credentials of its own — the header/tool-argument model applies there too.
