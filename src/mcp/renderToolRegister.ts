@@ -4,6 +4,13 @@ import { registerAppResource, registerAppTool } from "@modelcontextprotocol/ext-
 import path from "path";
 import { fileURLToPath } from "url";
 import { readFile } from "fs/promises";
+import { renderFenBoardHtml, renderPgnViewerHtml } from "./htmlBoardRenderer.js";
+
+const RAW_HTML_INSTRUCTIONS =
+  "Raw standalone HTML is included below as a fenced ```html code block. This does NOT " +
+  "depend on the MCP UI/app resource above, so use it if your client/agent does not support " +
+  "that extension: render the HTML directly (e.g. as an HTML artifact/preview) or save it to " +
+  "a .html file and open it in a browser to show the visualization to the user.";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -56,13 +63,30 @@ export function registerRenderingTools(server: McpServer): void {
     async (args) => {
       const { fen } = args;
 
+      const content: Array<{ type: "text"; text: string }> = [
+        {
+          type: "text",
+          text: `Rendering chess board for position: ${fen}`,
+        },
+      ];
+
+      try {
+        const html = renderFenBoardHtml(fen);
+        content.push(
+          { type: "text", text: RAW_HTML_INSTRUCTIONS },
+          { type: "text", text: "```html\n" + html + "\n```" }
+        );
+      } catch (err) {
+        content.push({
+          type: "text",
+          text: `Could not generate standalone HTML for this position: ${
+            err instanceof Error ? err.message : String(err)
+          }`,
+        });
+      }
+
       return {
-        content: [
-          {
-            type: "text",
-            text: `Rendering chess board for position: ${fen}`,
-          },
-        ],
+        content,
         _meta: {
           ui: {
             data: {
@@ -119,13 +143,30 @@ export function registerRenderingTools(server: McpServer): void {
     async (args) => {
       const { pgn } = args;
 
+      const content: Array<{ type: "text"; text: string }> = [
+        {
+          type: "text",
+          text: `Rendering PGN game viewer for game`,
+        },
+      ];
+
+      try {
+        const html = renderPgnViewerHtml(pgn);
+        content.push(
+          { type: "text", text: RAW_HTML_INSTRUCTIONS },
+          { type: "text", text: "```html\n" + html + "\n```" }
+        );
+      } catch (err) {
+        content.push({
+          type: "text",
+          text: `Could not generate standalone HTML for this game: ${
+            err instanceof Error ? err.message : String(err)
+          }`,
+        });
+      }
+
       return {
-        content: [
-          {
-            type: "text",
-            text: `Rendering PGN game viewer for game`,
-          },
-        ],
+        content,
         _meta: {
           ui: {
             data: {

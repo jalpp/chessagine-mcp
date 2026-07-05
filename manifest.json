@@ -1,7 +1,7 @@
 {
   "manifest_version": "0.3",
-  "name": "chessagine-mcp-v0.7.7",
-  "version": "0.7.7",
+  "name": "chessagine-mcp",
+  "version": "0.7.8",
   "description": "ChessAgine MCP connects LLMs directly to live chess context Stockfish evaluation, board state, positional themes, ChessDB openings, Lichess games, and neural engines like Maia3, Leela, and Elite Leela. It also renders chess positions and full PGN games for deep visual analysis, turning language models into truly chess-aware agents.",
   "author": {
     "name": "Jalp",
@@ -20,7 +20,6 @@
       ],
       "env": {
         "LICHESS_API_TOKEN": "${user_config.LICHESS_API_KEY}",
-        "LICHESS_USERNAME": "${user_config.LICHESS_USERNAME}",
         "CHESSBOARD_MAGIC_PAT": "${user_config.CHESSBOARD_MAGIC_PAT}",
         "POSIRA_API_KEY": "${user_config.POSIRA_API_KEY}"
       }
@@ -30,15 +29,8 @@
     "LICHESS_API_KEY": {
       "type": "string",
       "title": "Lichess API key",
-      "description": "Your Lichess API token with study:read permission, this token be also used for Lichess explorer. Get a PAT from Lichess here https://lichess.org/account/oauth/token",
+      "description": "Your personal Lichess API token (with study:read for private studies). Used as a fallback for Lichess explorer/games/studies tools when no token is passed in conversation. Get a PAT from https://lichess.org/account/oauth/token",
       "sensitive": true,
-      "required": false
-    },
-    "LICHESS_USERNAME": {
-      "type": "string",
-      "title": "Your Lichess Username",
-      "description": "Enter your Lichess Username, to help LLM pull your games and other lichess tools",
-      "sensitive": false,
       "required": false
     },
     "CHESSBOARD_MAGIC_PAT": {
@@ -56,7 +48,6 @@
       "required": false
     }
   },
-  
   "keywords": [
     "chess",
     "stockfish",
