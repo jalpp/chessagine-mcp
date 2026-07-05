@@ -2,11 +2,13 @@
 
 import { createMcpExpressApp } from "@modelcontextprotocol/sdk/server/express.js";
 import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
+import type { AuthInfo } from "@modelcontextprotocol/sdk/server/auth/types.js";
 import { StreamableHTTPServerTransport } from "@modelcontextprotocol/sdk/server/streamableHttp.js";
 import cors from "cors";
 import type { Request, Response } from "express";
 import { server } from "./server.js";
-import { registerAgine } from "../mcp/registerAgine.js";
+import { registerAgineRemote } from "../mcp/remote/registerAgineRemote.js";
+import { extractRemoteCredentials } from "../mcp/remote/remoteAuth.js";
 
 /**
  * Factory function to create a new MCP server instance
@@ -14,7 +16,7 @@ import { registerAgine } from "../mcp/registerAgine.js";
 function createChessAgineServer(): McpServer {
   // Create a new server instance for each request
   const serverInstance = Object.create(server);
-  registerAgine(serverInstance);
+  registerAgineRemote(serverInstance);
   return serverInstance;
 }
 
@@ -39,6 +41,18 @@ async function startStreamableHTTPServer(): Promise<void> {
     });
 
     try {
+      // Resolve X-Lichess-Token / X-Chessboardmagic-Token / X-Posira-Token
+      // headers (see src/mcp/remote/remoteAuth.ts) into an AuthInfo the SDK
+      // threads through to every tool call as `extra.authInfo`. Same
+      // no-env-var, header-then-tool-argument precedence as api/mcp.ts.
+      const authInfo: AuthInfo = {
+        token: "chessagine-remote-passthrough",
+        clientId: "chessagine-remote",
+        scopes: [],
+        extra: extractRemoteCredentials(req.headers) as Record<string, unknown>,
+      };
+      (req as typeof req & { auth?: AuthInfo }).auth = authInfo;
+
       await serverInstance.connect(transport);
       await transport.handleRequest(req, res, req.body);
     } catch (error) {
