@@ -24,6 +24,11 @@ node_modules/mcp-handler/**
 node_modules/redis/**
 node_modules/@redis/**
 
+# Local-only tooling and packaging helpers
+/.smithery/
+/.mastra/
+/runSmokeTest.py
+
 # Dev/type-check tooling
 node_modules/typescript/**
 node_modules/ts-node/**
