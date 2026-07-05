@@ -37,12 +37,12 @@ npm run build
 
 #### Configure Claude Desktop
 
-# MacOs
+### MacOs
 Add to `~/Library/Application Support/Claude/claude_desktop_config.json`
-#Windows
+### Windows
 Run `(Get-AppxPackage *Claude*).PackageFamilyName` to find the virtualized Claude Desktop folder
 Add to `%LOCALAPPDATA%\Packages\Claude_virtualized_folder\LocalCache\Roaming\Claude\claude_desktop_config.json`
-# Linux 
+### Linux 
 Add to `~/.config/Claude/claude_desktop_config.json` 
 
 **macOS/Linux:**
