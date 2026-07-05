@@ -16,23 +16,14 @@ It also renders individual positions and full PGN games for in-depth visual anal
 
 ## Installation
 
-### Option 1: Using MCPB File (Recommended)
+ChessAgine MCP is aimed at chess players as much as developers — if you're not sure whether you have Node.js/npm installed, see the [prerequisites note in install.md](install.md#local-build-prerequisite-for-stdio-setups) before picking an option below.
 
-Download the `chessagine-mcp.mcpb` file and install it directly in Claude Desktop:
+### Option 1: Config File (Recommended, most reliable)
 
-1. Download the latest release from [GitHub releases](https://github.com/jalpp/chessagine-mcp/releases)
-2. Open Claude Desktop
-3. Go to Settings → Extensions → Install from file
-4. Select the `chessagine-mcp.mcpb` file
-5. Restart Claude Desktop
-
-> [!NOTE]  
-> To make sure its working correctly ask it to render the chessboard or a specific chess query
-
-### Option 2: Local Development Setup
+This is currently the most stable way to connect ChessAgine MCP to Claude Desktop.
 
 #### Prerequisites
-- Node.js 22+ 
+- Node.js 22+
 - npm or yarn package manager
 
 #### Clone and Setup
@@ -45,7 +36,7 @@ npm run build
 
 #### Configure Claude Desktop
 
-Add to `~/Library/Application Support/Claude/claude_desktop_config.json`:
+Add to `~/Library/Application Support/Claude/claude_desktop_config.json` (macOS), `%APPDATA%\Claude\claude_desktop_config.json` (Windows), or `~/.config/Claude/claude_desktop_config.json` (Linux):
 
 **macOS/Linux:**
 ```json
@@ -53,7 +44,12 @@ Add to `~/Library/Application Support/Claude/claude_desktop_config.json`:
   "mcpServers": {
     "chessagine-mcp": {
       "command": "node",
-      "args": ["/absolute/path/to/chessagine-mcp/build/runner/stdio.js"]
+      "args": ["/absolute/path/to/chessagine-mcp/build/runner/stdio.js"],
+      "env": {
+        "LICHESS_API_TOKEN": "optional-your-lichess-api-token",
+        "CHESSBOARD_MAGIC_PAT": "optional-your-chessboardmagic-pat",
+        "POSIRA_API_KEY": "optional-your-posira-api-key"
+      }
     }
   }
 }
@@ -65,11 +61,42 @@ Add to `~/Library/Application Support/Claude/claude_desktop_config.json`:
   "mcpServers": {
     "chessagine-mcp": {
       "command": "node", 
-      "args": ["C:\\absolute\\path\\to\\chessagine-mcp\\build\\runner\\stdio.js"]
+      "args": ["C:\\absolute\\path\\to\\chessagine-mcp\\build\\runner\\stdio.js"],
+      "env": {
+        "LICHESS_API_TOKEN": "optional-your-lichess-api-token",
+        "CHESSBOARD_MAGIC_PAT": "optional-your-chessboardmagic-pat",
+        "POSIRA_API_KEY": "optional-your-posira-api-key"
+      }
     }
   }
 }
 ```
+
+### Option 2: Using MCPB File (experimental — currently less stable)
+
+> [!WARNING]  
+> The `.mcpb` install path has known rough edges in some Claude Desktop versions. If it fails to load, use **Option 1** above instead. Its one advantage: Claude Desktop runs it with its own bundled Node runtime, so you don't need Node.js/npm installed yourself for this option.
+
+Download the `chessagine-mcp.mcpb` file and install it directly in Claude Desktop:
+
+1. Download the latest release from [GitHub releases](https://github.com/jalpp/chessagine-mcp/releases)
+2. Open Claude Desktop
+3. Go to Settings → Extensions → Install from file
+4. Select the `chessagine-mcp.mcpb` file
+5. Restart Claude Desktop
+
+> [!NOTE]  
+> To make sure its working correctly ask it to render the chessboard or a specific chess query
+
+### Option 3: Connect to the Hosted Remote Server (No Install)
+
+Skip the build entirely and point any MCP-compatible client at the hosted deployment:
+
+```
+https://chessagine-mcp.vercel.app/mcp
+```
+
+This is a Streamable HTTP endpoint — no API key or local setup required. Exact steps differ by client (config file vs. UI), so see **[install.md](install.md)** for copy-pasteable setup steps covering Claude Desktop, Claude Code, LibreChat, Open WebUI, AnythingLLM, Jan, Goose, Cursor, Windsurf, Cline, VS Code, Continue.dev, Zed, and other MCP-compatible GUIs — both open source and proprietary — for both the remote URL and the local stdio server.
 
 ### Usage:
 

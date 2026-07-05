@@ -1,14 +1,12 @@
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { fenSchema, puzzleThemesArraySchema, tokenSchema } from "../runner/schema.js";
 import z from "zod";
-import {
-  getToolAdapter,
-  postToolAdapter,
-  toolAdapter,
-  toolContentAdapter,
-} from "@jalpp/mcp-adapter";
+import { getToolAdapter, postToolAdapter } from "@jalpp/mcp-adapter";
 import { SERVICE_CONFIG_BASE_URL_MAP } from "../services/config.js";
 
+const staticLichessAuth = process.env.LICHESS_API_TOKEN
+  ? ({ type: "bearer" as const, token: process.env.LICHESS_API_TOKEN })
+  : undefined;
 
 export function registerLichessTools(server: McpServer): void {
   
@@ -19,6 +17,7 @@ export function registerLichessTools(server: McpServer): void {
     endpoint: "https://explorer.lichess.org/masters?fen=:fen&moves=12&topGames=15",
     inputSchema: { fen: fenSchema, token: tokenSchema },
     tokenParam: "token",
+    auth: staticLichessAuth,
   });
 
   getToolAdapter(server, {
@@ -28,6 +27,7 @@ export function registerLichessTools(server: McpServer): void {
     endpoint: "https://explorer.lichess.org/lichess?fen=:fen&moves=12&topGames=4",
     inputSchema: { fen: fenSchema, token: tokenSchema },
     tokenParam: "token",
+    auth: staticLichessAuth,
   });
 
   getToolAdapter(server, {
@@ -40,6 +40,7 @@ export function registerLichessTools(server: McpServer): void {
       token: tokenSchema,
     },
     tokenParam: "token",
+    auth: staticLichessAuth,
   });
 
   getToolAdapter(server, {
@@ -70,17 +71,6 @@ export function registerLichessTools(server: McpServer): void {
     },
   });
 
-  toolAdapter(server, {
-    name: "get-lichess-username",
-    config: {
-      description: "Get the Lichess username of the current MCP user",
-    },
-    cb: async () => {
-      const username = process.env.LICHESS_USERNAME || "No Username Found";
-      return toolContentAdapter({ username }, undefined);
-    },
-  });
-
   getToolAdapter(server, {
     name: "fetch-lichess-studies",
     description:
@@ -91,6 +81,7 @@ export function registerLichessTools(server: McpServer): void {
       token: tokenSchema,
     },
     tokenParam: "token",
+    auth: staticLichessAuth,
   });
 
   getToolAdapter(server, {
@@ -103,5 +94,6 @@ export function registerLichessTools(server: McpServer): void {
       token: tokenSchema,
     },
     tokenParam: "token",
+    auth: staticLichessAuth,
   });
 }
