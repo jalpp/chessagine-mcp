@@ -1,3 +1,5 @@
+[![MseeP.ai Security Assessment Badge](https://mseep.net/pr/jalpp-chessagine-mcp-badge.png)](https://mseep.ai/app/jalpp-chessagine-mcp)
+
 # ChessAgine MCP
 
 <p align="center">
