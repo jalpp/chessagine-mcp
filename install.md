@@ -166,7 +166,7 @@ If you deploy your own fork to Vercel (see the main README's "Deploy your own in
 
 ## Claude Desktop
 
-### Option 1: Config file (recommended, most reliable)
+### Option 1: Config file 
 
 This is the most stable way to connect ChessAgine MCP to Claude Desktop. It requires Node.js and npm to be installed on your machine (see [prerequisites](#local-build-prerequisite-for-stdio-setups) above) if you're running the server locally.
 
@@ -230,10 +230,8 @@ Custom Connectors are available on Pro, Max, Team, and Enterprise plans.
 
 Restart Claude Desktop after any config change.
 
-### Option 2: MCPB file (experimental — currently less stable than the config file)
+### Option 2: MCPB file 
 
-> [!WARNING]
-> The `.mcpb` bundle install path is newer and has known rough edges in some Claude Desktop versions. If it fails to load or behaves oddly, fall back to **Option 1** above, which is the more reliable path today.
 
 Claude Desktop's own bundled Node runtime runs `.mcpb` extensions, so this route does **not** require you to install Node.js or npm yourself — that's the main advantage over Option 1 if it works on your setup.
 
