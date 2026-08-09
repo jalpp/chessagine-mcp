@@ -1,12 +1,4 @@
-/**
- * @file Remote-only Posira tool registration.
- *
- * Unlike src/mcp/posiraToolRegister.ts (local stdio, env-only), these tools
- * now accept a per-request credential via the X-Posira-Token header (see
- * remoteAuth.ts), falling back to a `token` tool-call argument -- this is
- * new: the local/env-only version never had a per-call override at all.
- */
-import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
+import { McpServer } from "@modelcontextprotocol/server";
 import z from "zod";
 import { tokenSchema } from "../../runner/schema.js";
 import { SERVICE_CONFIG_BASE_URL_MAP } from "../../services/config.js";

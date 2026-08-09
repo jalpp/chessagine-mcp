@@ -1,4 +1,4 @@
-import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
+import { McpServer } from "@modelcontextprotocol/server";
 import z from "zod";
 import { getToolAdapter } from "@jalpp/mcp-adapter";
 import { SERVICE_CONFIG_BASE_URL_MAP } from "../services/config.js";

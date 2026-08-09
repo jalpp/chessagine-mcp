@@ -1,14 +1,4 @@
-/**
- * @file Remote-only Lichess tool registration.
- *
- * Unlike src/mcp/lichessToolRegister.ts (used by the local stdio server),
- * this file never reads process.env. Credentials come from a per-request
- * header (X-Lichess-Token, see remoteAuth.ts) or, failing that, from the
- * `token` tool-call argument the LLM can pass in conversation -- the same
- * fallback the stdio server has always supported. See install.md's
- * "API keys / optional credentials" section for the full precedence rules.
- */
-import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
+import { McpServer } from "@modelcontextprotocol/server";
 import { fenSchema, puzzleThemesArraySchema, tokenSchema } from "../../runner/schema.js";
 import z from "zod";
 import { getToolAdapter, postToolAdapter } from "@jalpp/mcp-adapter";

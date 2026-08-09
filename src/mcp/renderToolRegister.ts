@@ -1,4 +1,11 @@
-import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
+import { McpServer } from "@modelcontextprotocol/server";
+// @modelcontextprotocol/ext-apps has not yet published a v2-compatible
+// release (still peer-locked to @modelcontextprotocol/sdk@^1.29.0 as of
+// 1.7.5), so this file stays a deliberate v1/v2 boundary: it accepts the
+// same v2 McpServer every other register*Tools function does, but casts to
+// ext-apps' own v1 McpServer type only at the two call sites below. Revert
+// this cast once ext-apps ships a v2-compatible release.
+import type { McpServer as V1McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { fenSchema, gamePgnSchema } from "../runner/schema.js";
 import { registerAppResource, registerAppTool } from "@modelcontextprotocol/ext-apps/server";
 import path from "path";
@@ -16,12 +23,12 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 export function registerRenderingTools(server: McpServer): void {
-  
+  const legacyServer = server as unknown as V1McpServer;
 
   const chessBoardResourceUri = "ui://chessagine/chess-board";
   
   registerAppResource(
-    server,
+    legacyServer,
     "Chess Board Viewer",
     chessBoardResourceUri,
     {
@@ -45,7 +52,7 @@ export function registerRenderingTools(server: McpServer): void {
 
   
   registerAppTool(
-    server,
+    legacyServer,
     "render_chess_board",
     {
       title: "Render Chess Board",
@@ -60,7 +67,7 @@ export function registerRenderingTools(server: McpServer): void {
         },
       },
     },
-    async (args) => {
+    async (args: { fen: string }) => {
       const { fen } = args;
 
       const content: Array<{ type: "text"; text: string }> = [
@@ -101,7 +108,7 @@ export function registerRenderingTools(server: McpServer): void {
   const pgnViewerResourceUri = "ui://chessagine/pgn-viewer";
   
   registerAppResource(
-    server,
+    legacyServer,
     "PGN Game Viewer",
     pgnViewerResourceUri,
     {
@@ -125,7 +132,7 @@ export function registerRenderingTools(server: McpServer): void {
 
 
   registerAppTool(
-    server,
+    legacyServer,
     "render_pgn_viewer",
     {
       title: "Render PGN Game Viewer",
@@ -140,7 +147,7 @@ export function registerRenderingTools(server: McpServer): void {
         },
       },
     },
-    async (args) => {
+    async (args: { pgn: string }) => {
       const { pgn } = args;
 
       const content: Array<{ type: "text"; text: string }> = [

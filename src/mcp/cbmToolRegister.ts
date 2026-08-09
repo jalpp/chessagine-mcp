@@ -1,4 +1,4 @@
-import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
+import { McpServer } from "@modelcontextprotocol/server";
 import { cbmGameIdSchema, cbmRepIdSchema, fenSchema } from "../runner/schema.js";
 import { getToolAdapter } from "@jalpp/mcp-adapter";
 import { tokenSchema } from "../runner/schema.js";
