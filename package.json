@@ -33,12 +33,16 @@
     "node": ">=20.9.0"
   },
   "dependencies": {
-    "@jalpp/mcp-adapter": "^3.0.0",
+    "@jalpp/mcp-adapter": "^4.0.0",
+    "@modelcontextprotocol/express": "^2.0.0",
     "@modelcontextprotocol/ext-apps": "^1.7.5",
+    "@modelcontextprotocol/inspector": "^2.1.0",
+    "@modelcontextprotocol/node": "^2.0.0",
     "@modelcontextprotocol/sdk": "^1.30.0",
+    "@modelcontextprotocol/server": "^2.0.0",
     "axios": "^1.17.0",
     "chess.js": "^1.4.0",
-    "zod": "^3.25.76"
+    "zod": "^4.2.0"
   },
   "devDependencies": {
     "@mliebelt/pgn-viewer": "^1.6.11",

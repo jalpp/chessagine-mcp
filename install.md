@@ -2,7 +2,7 @@
 
 This guide covers connecting **ChessAgine MCP** to every popular MCP-compatible client — Claude Desktop, several open-source chat/agent GUIs (LibreChat, Open WebUI, AnythingLLM, Jan, Goose), and popular MCP-enabled IDEs — using either:
 
-- **Remote (hosted, no install)** — connect straight to `https://chessagine-mcp.vercel.app/mcp`. This is the public Streamable HTTP endpoint for this repo's Vercel deployment. No API key, no build step, no local Node install required. (Legacy `/sse` and `/message` routes are also proxied to the same handler for older clients.)
+- **Remote (hosted, no install)** — connect straight to `https://chessagine-mcp.vercel.app/mcp`. This is the public Streamable HTTP endpoint for this repo's Vercel deployment. No API key, no build step, no local Node install required. (`/sse` and `/message` are still routed to the same handler, but as of the `mcp-handler` v2 upgrade they now respond `410 Gone` — the old HTTP+SSE transport itself was removed; use a Streamable HTTP client against `/mcp`.)
 - **Local (stdio)** — clone this repo, build it, and point your client at `build/runner/stdio.js` on your machine. Use this if you want to run your own copy, modify the server, or work offline.
 
 **A note for non-developers:** ChessAgine MCP is aimed at chess players, not just engineers, so several sections below call out exactly what software (Node.js, npm) you need installed before a step will work — don't assume it's already on your machine.

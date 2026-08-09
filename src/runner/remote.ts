@@ -1,9 +1,8 @@
 #!/usr/bin/env node
 
-import { createMcpExpressApp } from "@modelcontextprotocol/sdk/server/express.js";
-import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
-import type { AuthInfo } from "@modelcontextprotocol/sdk/server/auth/types.js";
-import { StreamableHTTPServerTransport } from "@modelcontextprotocol/sdk/server/streamableHttp.js";
+import { NodeStreamableHTTPServerTransport } from "@modelcontextprotocol/node";
+import type { McpServer, AuthInfo } from "@modelcontextprotocol/server";
+import { createMcpExpressApp } from "@modelcontextprotocol/express";
 import cors from "cors";
 import type { Request, Response } from "express";
 import { server } from "./server.js";
@@ -31,7 +30,7 @@ async function startStreamableHTTPServer(): Promise<void> {
 
   app.all("/mcp", async (req: Request, res: Response) => {
     const serverInstance = createChessAgineServer();
-    const transport = new StreamableHTTPServerTransport({
+    const transport = new NodeStreamableHTTPServerTransport({
       sessionIdGenerator: undefined,
     });
 

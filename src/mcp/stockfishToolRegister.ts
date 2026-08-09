@@ -1,4 +1,4 @@
-import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
+import { McpServer } from "@modelcontextprotocol/server";
 import { fenSchema, engineDepthSchema } from "../runner/schema.js";
 import { z } from "zod";
 import { postToolAdapter } from "@jalpp/mcp-adapter";

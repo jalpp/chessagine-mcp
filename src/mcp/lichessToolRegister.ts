@@ -1,4 +1,4 @@
-import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
+import { McpServer } from "@modelcontextprotocol/server";
 import { fenSchema, puzzleThemesArraySchema, tokenSchema } from "../runner/schema.js";
 import z from "zod";
 import { getToolAdapter, postToolAdapter } from "@jalpp/mcp-adapter";

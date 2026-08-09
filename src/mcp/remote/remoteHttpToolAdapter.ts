@@ -1,26 +1,5 @@
-/**
- * @file Minimal HTTP-endpoint-to-tool adapter for remote-only tool registration.
- *
- * This mirrors the subset of @jalpp/mcp-adapter's httpToolAdapter behavior
- * that ChessAgine's Lichess/ChessBoardMagic/Posira tools need (:param path
- * interpolation, GET query params / POST JSON body, bearer auth), but adds
- * one thing the published adapter doesn't support yet: reading a per-request
- * credential from `extra.authInfo.extra` (populated from an HTTP header --
- * see remoteAuth.ts) before falling back to a `token` tool-call argument.
- *
- * Precedence for a bearer token, remote-only, no env var involved at all:
- *   1. extra.authInfo.extra[headerCredKey]  (header the client set)
- *   2. args[tokenParam]                     (token the LLM passed in-band)
- *   3. no Authorization header sent at all
- *
- * This intentionally stays local to chessagine-mcp rather than patching
- * @jalpp/mcp-adapter, so the published adapter and the local stdio server's
- * behavior (env-var fallback, via getToolAdapter/postToolAdapter) are
- * completely unaffected.
- */
-import { McpServer, ToolCallback } from "@modelcontextprotocol/sdk/server/mcp.js";
-import type { ZodRawShapeCompat } from "@modelcontextprotocol/sdk/server/zod-compat.js";
-import { toolAdapter, toolContentAdapter } from "@jalpp/mcp-adapter";
+import { McpServer } from "@modelcontextprotocol/server";
+import { toolAdapter, toolContentAdapter, type ZodRawShapeCompat, type LegacyToolCallback } from "@jalpp/mcp-adapter";
 import axios from "axios";
 import type { RemoteAuthInfoExtra } from "./remoteAuth.js";
 
@@ -69,11 +48,13 @@ export function remoteHttpToolAdapter<T extends ZodRawShapeCompat>(
 ): void {
   const { name, description, endpoint, method, inputSchema, tokenParam, headerCredKey } = config;
 
-  const cb = (async (args: Record<string, unknown> | undefined, extra: unknown) => {
+  const cb = (async (args: Record<string, unknown> | undefined, ctx: unknown) => {
     const mutableArgs: Record<string, unknown> = { ...(args ?? {}) };
 
-    const authInfoExtra = (extra as { authInfo?: { extra?: RemoteAuthInfoExtra } } | undefined)
-      ?.authInfo?.extra;
+    // v2: the per-request auth info moved from v1's `extra.authInfo` to
+    // `ctx.http?.authInfo` (see the SDK's v1-to-v2 migration guide).
+    const authInfoExtra = (ctx as { http?: { authInfo?: { extra?: RemoteAuthInfoExtra } } } | undefined)
+      ?.http?.authInfo?.extra;
     const headerToken = authInfoExtra?.[headerCredKey];
 
     let bearerToken: string | undefined =
@@ -110,7 +91,7 @@ export function remoteHttpToolAdapter<T extends ZodRawShapeCompat>(
       }
       return toolContentAdapter({}, `Unexpected error: ${String(err)}`);
     }
-  }) as ToolCallback<T>;
+  }) as LegacyToolCallback<T>;
 
   if (inputSchema) {
     toolAdapter(server, {
@@ -122,7 +103,7 @@ export function remoteHttpToolAdapter<T extends ZodRawShapeCompat>(
     toolAdapter(server, {
       name,
       config: { description },
-      cb: cb as ToolCallback<undefined>,
+      cb: cb as LegacyToolCallback<undefined>,
     });
   }
 }

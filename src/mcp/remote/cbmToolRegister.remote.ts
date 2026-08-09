@@ -1,11 +1,4 @@
-/**
- * @file Remote-only ChessBoard Magic tool registration.
- *
- * See lichessToolRegister.remote.ts for the general pattern: no process.env
- * reads here. Credentials come from the X-Chessboardmagic-Token header
- * (see remoteAuth.ts) or, failing that, the `token` tool-call argument.
- */
-import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
+import { McpServer } from "@modelcontextprotocol/server";
 import { cbmGameIdSchema, cbmRepIdSchema, fenSchema, tokenSchema } from "../../runner/schema.js";
 import { SERVICE_CONFIG_BASE_URL_MAP } from "../../services/config.js";
 import { remoteHttpToolAdapter } from "./remoteHttpToolAdapter.js";

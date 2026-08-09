@@ -1,4 +1,4 @@
-import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
+import { McpServer } from "@modelcontextprotocol/server";
 import { fenSchema, is960Schema, moveSchema, movesListSchema } from "../runner/schema.js";
 import { postToolAdapter } from "@jalpp/mcp-adapter";
 import { SERVICE_CONFIG_BASE_URL_MAP } from "../services/config.js";
