@@ -6,26 +6,12 @@ import type { RemoteAuthInfoExtra } from "./remoteAuth.js";
 type RemoteHttpMethod = "GET" | "POST";
 
 export interface RemoteHttpToolConfig<T extends ZodRawShapeCompat> {
-  /** Unique tool name. */
   name: string;
-  /** Description shown to the model. */
   description: string;
-  /** Full endpoint URL. Supports `:paramName` path variable interpolation. */
   endpoint: string;
-  /** HTTP method. */
   method: RemoteHttpMethod;
-  /** Zod shape defining the tool's input arguments. */
   inputSchema?: T;
-  /**
-   * Name of the input arg that carries a fallback bearer token passed by the
-   * LLM in conversation. Only used when no header credential is present.
-   */
   tokenParam?: string;
-  /**
-   * Key into `extra.authInfo.extra` (see remoteAuth.ts's RemoteCredentials)
-   * that holds this service's header-sourced credential, if the client sent
-   * one. Takes priority over `tokenParam` when present.
-   */
   headerCredKey: keyof RemoteAuthInfoExtra;
 }
 
@@ -51,8 +37,6 @@ export function remoteHttpToolAdapter<T extends ZodRawShapeCompat>(
   const cb = (async (args: Record<string, unknown> | undefined, ctx: unknown) => {
     const mutableArgs: Record<string, unknown> = { ...(args ?? {}) };
 
-    // v2: the per-request auth info moved from v1's `extra.authInfo` to
-    // `ctx.http?.authInfo` (see the SDK's v1-to-v2 migration guide).
     const authInfoExtra = (ctx as { http?: { authInfo?: { extra?: RemoteAuthInfoExtra } } } | undefined)
       ?.http?.authInfo?.extra;
     const headerToken = authInfoExtra?.[headerCredKey];

@@ -21,7 +21,8 @@
       "env": {
         "LICHESS_API_TOKEN": "${user_config.LICHESS_API_KEY}",
         "CHESSBOARD_MAGIC_PAT": "${user_config.CHESSBOARD_MAGIC_PAT}",
-        "POSIRA_API_KEY": "${user_config.POSIRA_API_KEY}"
+        "POSIRA_API_KEY": "${user_config.POSIRA_API_KEY}",
+        "DOJO_PAT_TOKEN": "${user_config.DOJO_PAT_TOKEN}"
       }
     }
   },
@@ -44,6 +45,13 @@
       "type": "string",
       "title": "Posira explorer PAT Key",
       "description": "Your Posira API key, get the PAT from here https://posira.dev/dashboard/login",
+      "sensitive": true,
+      "required": false
+    },
+    "DOJO_PAT_TOKEN": {
+      "type": "string",
+      "title": "ChessDojo PAT Key",
+      "description": "Your ChessDojo Personal Access Token (PAT). Used as a fallback for the ChessDojo training plan tools when no token is passed in conversation. Generate a PAT from your ChessDojo account settings.",
       "sensitive": true,
       "required": false
     }

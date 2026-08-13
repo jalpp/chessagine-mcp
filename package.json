@@ -24,7 +24,8 @@
     "start": "node build/runner/stdio.js",
     "remote": "node build/runner/remote.js",
     "clean": "shx rm -rf build dist",
-    "hardclean": "shx rm -rf node_modules"
+    "hardclean": "shx rm -rf node_modules",
+    "test": "node --loader ts-node/esm --test src/**/*.test.ts"
   },
   "keywords": [],
   "author": "Jalp",

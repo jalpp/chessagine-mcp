@@ -9,6 +9,7 @@ import { registerBoardStateTools } from "../boardToolRegister.js";
 import { registerLichessToolsRemote } from "./lichessToolRegister.remote.js";
 import { registerCBMToolsRemote } from "./cbmToolRegister.remote.js";
 import { registerPosiraToolsRemote } from "./posiraToolRegister.remote.js";
+import { registerDojoToolsRemote } from "./dojoToolRegister.remote.js";
 
 export function registerAgineRemote(server: McpServer): void {
     registerLichessToolsRemote(server);
@@ -21,4 +22,5 @@ export function registerAgineRemote(server: McpServer): void {
     registerChessDBTools(server);
     registerNeuralNetTools(server);
     registerPosiraToolsRemote(server);
+    registerDojoToolsRemote(server);
 }

@@ -1,10 +1,4 @@
 import { McpServer } from "@modelcontextprotocol/server";
-// @modelcontextprotocol/ext-apps has not yet published a v2-compatible
-// release (still peer-locked to @modelcontextprotocol/sdk@^1.29.0 as of
-// 1.7.5), so this file stays a deliberate v1/v2 boundary: it accepts the
-// same v2 McpServer every other register*Tools function does, but casts to
-// ext-apps' own v1 McpServer type only at the two call sites below. Revert
-// this cast once ext-apps ships a v2-compatible release.
 import type { McpServer as V1McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { fenSchema, gamePgnSchema } from "../runner/schema.js";
 import { registerAppResource, registerAppTool } from "@modelcontextprotocol/ext-apps/server";

@@ -143,3 +143,74 @@ export const puzzleThemeSchema = z.enum([
 export const puzzleThemesArraySchema = z
   .array(puzzleThemeSchema)
   .describe("Array of puzzle theme tags to filter by (e.g., ['fork', 'pin', 'mateIn2'])");
+
+// ChessDojo training plan cohorts, mirrored from jackstenglein/chess-dojo's
+// common/src/database/cohort.ts `dojoCohorts` array.
+export const dojoCohortSchema = z
+  .enum([
+    "0-300",
+    "300-400",
+    "400-500",
+    "500-600",
+    "600-700",
+    "700-800",
+    "800-900",
+    "900-1000",
+    "1000-1100",
+    "1100-1200",
+    "1200-1300",
+    "1300-1400",
+    "1400-1500",
+    "1500-1600",
+    "1600-1700",
+    "1700-1800",
+    "1800-1900",
+    "1900-2000",
+    "2000-2100",
+    "2100-2200",
+    "2200-2300",
+    "2300-2400",
+    "2400+",
+  ])
+  .describe("ChessDojo training plan cohort range the user belongs to, e.g. '1200-1300'");
+
+export const dojoScoreboardOnlySchema = z
+  .boolean()
+  .default(false)
+  .describe("Whether to only return requirements that are visible on the scoreboard");
+
+// Mirrors jackstenglein/chess-dojo's ProgressUpdateRequest
+// (backend/user/progress/update/main.go), submitted by the frontend as
+// UpdateUserProgressRequest (frontend/src/api/userApi.ts) to POST /user/progress/v3.
+export const dojoRequirementIdSchema = z
+  .string()
+  .min(1)
+  .describe("The id of the ChessDojo training plan requirement to update");
+
+export const dojoPreviousCountSchema = z
+  .number()
+  .int()
+  .describe("The count of the requirement before the update");
+
+export const dojoNewCountSchema = z
+  .number()
+  .int()
+  .describe("The count of the requirement after the update");
+
+export const dojoIncrementalMinutesSpentSchema = z
+  .number()
+  .int()
+  .default(0)
+  .describe("The amount by which the user is increasing their time spent, in minutes");
+
+export const dojoDateSchema = z
+  .string()
+  .optional()
+  .describe(
+    "Optional RFC3339 timestamp the update should apply to (e.g. 2024-01-01T00:00:00.000Z). Omit or send an empty string to use the current time.",
+  );
+
+export const dojoNotesSchema = z
+  .string()
+  .optional()
+  .describe("Optional user comments for the progress update");

@@ -9,6 +9,7 @@ import { registerNeuralNetTools } from "./neuralNetToolRegister.js";
 import { registerPosiraTools } from "./posiraToolRegister.js";
 import { registerThemeAnalysisTools } from "./themesToolRegister.js";
 import { registerBoardStateTools } from "./boardToolRegister.js";
+import { registerDojoTools } from "./dojoToolRegister.js";
 
 
 export function registerAgine(server: McpServer): void {
@@ -22,4 +23,5 @@ export function registerAgine(server: McpServer): void {
     registerChessDBTools(server);
     registerNeuralNetTools(server);
     registerPosiraTools(server);
+    registerDojoTools(server);
 }
