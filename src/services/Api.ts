@@ -1,10 +1,10 @@
-import { authServiceConfig, getAuthServiceFactory } from "../mcp/factory/authFactory.js";
+import { AuthServiceConfig, getAuthServiceFactory } from "../mcp/factory/authFactory.js";
 import { ExternalService } from "./config.js";
 
 export class API {
 
     private serviceType: ExternalService;
-    private factory: authServiceConfig;
+    private factory: AuthServiceConfig;
     private isRemoteHeaderSupported;
 
 

@@ -11,8 +11,8 @@ import {
   fenSchema,
   tokenSchema,
 } from "../runner/schema.js";
-import { RemoteHttpMethod, RemoteHttpToolConfig } from "../mcp/remote/remoteHttpToolAdapter.js";
-import { RemoteCredentials } from "../mcp/remote/remoteAuth.js";
+import { RemoteHttpToolConfig } from "../mcp/remote/remoteHttpToolAdapter.js";
+import { setRemoteContract } from "../mcp/remote/createRemoteContract.js";
 
 export class ChessBoardMagicApiContract extends API implements APIContract {
   constructor() {
@@ -115,16 +115,12 @@ export class ChessBoardMagicApiContract extends API implements APIContract {
     const localContracts = this.getContracts();
     const remoteContracts: RemoteHttpToolConfig<{}>[] = [];
 
-    for(let i = 0; i < localContracts.length; i++) {
-      if(localContracts[i].tokenParam === "token"){
-        const remoteContract = {
-          ...localContracts[i],
-          method: "GET" as RemoteHttpMethod,
-          headerCredKey: this.getAuthServiceConfig().headerKey as keyof RemoteCredentials
-        }
-        remoteContracts.push(remoteContract);
-      }
-    }
+    setRemoteContract(
+      localContracts,
+      remoteContracts,
+      "GET",
+      this.getAuthServiceConfig(),
+    );
 
     return remoteContracts;
   }
@@ -132,6 +128,4 @@ export class ChessBoardMagicApiContract extends API implements APIContract {
   isRemoteEnvContract(): boolean {
     return this.getRemoteHeaderSupported();
   }
-
-  
 }

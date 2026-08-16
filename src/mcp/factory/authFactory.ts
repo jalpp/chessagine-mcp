@@ -9,7 +9,7 @@ type tokenType = "bearer";
 
 type authType = { type: tokenType; token: string };
 
-export interface authServiceConfig {
+export interface AuthServiceConfig {
   baseUrl: string;
   staticAuth: authType;
   headerKey?: string;
@@ -17,7 +17,7 @@ export interface authServiceConfig {
 
 export function getAuthServiceFactory(
   serviceType: ExternalService,
-): authServiceConfig {
+): AuthServiceConfig {
   const authSeviceType: authType = {
     type: "bearer",
     token: SERVICE_CONFIG_API_TOKEN[serviceType] ?? "",

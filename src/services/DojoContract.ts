@@ -21,6 +21,7 @@ import {
   RemoteHttpToolConfig,
 } from "../mcp/remote/remoteHttpToolAdapter.js";
 import { RemoteCredentials } from "../mcp/remote/remoteAuth.js";
+import { setRemoteContract } from "../mcp/remote/createRemoteContract.js";
 
 export class ChessDojoApiContract extends API implements APIContract {
   constructor() {
@@ -56,7 +57,7 @@ export class ChessDojoApiContract extends API implements APIContract {
         },
         tokenParam: "token",
         auth: staticAuth,
-      }
+      },
     ];
 
     return contracts;
@@ -98,32 +99,23 @@ export class ChessDojoApiContract extends API implements APIContract {
   getMethodRemoteContracts(): RemoteHttpToolConfig<{}>[] {
     const localContracts = this.getContracts();
     const remoteContracts: RemoteHttpToolConfig<{}>[] = [];
+    const authServiceConfig = this.getAuthServiceConfig();
 
-    for (let i = 0; i < localContracts.length; i++) {
-      if (localContracts[i].tokenParam === "token") {
-        const remoteContract = {
-          ...localContracts[i],
-          method: "GET" as RemoteHttpMethod,
-          headerCredKey: this.getAuthServiceConfig()
-            .headerKey as keyof RemoteCredentials,
-        };
-        remoteContracts.push(remoteContract);
-      }
-    }
+    setRemoteContract(
+      localContracts,
+      remoteContracts,
+      "GET",
+      authServiceConfig,
+    );
 
     const postContracts = this.postContracts();
 
-    for (let i = 0; i < postContracts.length; i++) {
-      if (postContracts[i].tokenParam === "token") {
-        const remoteContract = {
-          ...postContracts[i],
-          method: "POST" as RemoteHttpMethod,
-          headerCredKey: this.getAuthServiceConfig()
-            .headerKey as keyof RemoteCredentials,
-        };
-        remoteContracts.push(remoteContract);
-      }
-    }
+    setRemoteContract(
+      postContracts,
+      remoteContracts,
+      "POST",
+      authServiceConfig,
+    );
 
     return remoteContracts;
   }
