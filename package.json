@@ -25,7 +25,7 @@
     "remote": "node build/runner/remote.js",
     "clean": "shx rm -rf build dist",
     "hardclean": "shx rm -rf node_modules",
-    "test": "node --loader ts-node/esm --test src/**/*.test.ts"
+    "test": "python runSmokeTest.py --env local"
   },
   "keywords": [],
   "author": "Jalp",
