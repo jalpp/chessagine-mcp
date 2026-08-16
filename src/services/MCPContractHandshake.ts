@@ -16,13 +16,13 @@ export class MCPContractHandshakeStrategy {
     this.contracts = handShakeContracts;
   }
 
-  public applyBulkContracts() {
+  public performApiContractsHandshakes() {
     for (let i = 0; i < this.contracts.length; i++) {
-      this.applyContracts(this.contracts[i]);
+      this.performHandshake(this.contracts[i]);
     }
   }
 
-  private applyContracts(contract: APIContract) {
+  private performHandshake(contract: APIContract) {
     const getContracts = contract.getContracts();
     const getContractsSize = getContracts.length;
     const postContracts = contract.postContracts();

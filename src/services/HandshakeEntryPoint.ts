@@ -13,7 +13,6 @@ import { MCPContractHandshakeStrategy } from "./MCPContractHandshake.js";
 
 export function performChessAgineHandshake(
   mcpServer: McpServer,
-  isRemoteEnvEnabled: boolean,
 ) {
   const boardStateContract = new BoardStateEngineContract();
 
@@ -51,5 +50,5 @@ export function performChessAgineHandshake(
     ],
   );
 
-  handshakePerformer.applyBulkContracts();
+  handshakePerformer.performApiContractsHandshakes();
 }
