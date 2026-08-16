@@ -49,7 +49,6 @@ export function performChessAgineHandshake(
       themeContract,
       utilContract,
     ],
-    isRemoteEnvEnabled,
   );
 
   handshakePerformer.applyBulkContracts();

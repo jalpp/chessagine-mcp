@@ -37,6 +37,6 @@ export const SERVICE_CONFIG_API_TOKEN: Record<ExternalService, string | undefine
     LICHESS_BASE_URL: process.env.LICHESS_API_TOKEN ?? "",
     POSIRA_BASE_URL: process.env.POSIRA_API_KEY ?? "",
     CBM_BASE_URL: process.env.CHESSBOARD_MAGIC_PAT ?? "",
-    DOJO_BASE_URL: process.env.DOJO_PAT_TOKEN ?? ""
+    DOJO_BASE_URL: process.env.DOJO_API_KEY ?? ""
 
 }

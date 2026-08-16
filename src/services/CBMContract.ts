@@ -129,5 +129,9 @@ export class ChessBoardMagicApiContract extends API implements APIContract {
     return remoteContracts;
   }
 
+  isRemoteEnvContract(): boolean {
+    return this.getRemoteHeaderSupported();
+  }
+
   
 }

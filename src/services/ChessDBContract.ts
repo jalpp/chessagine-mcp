@@ -55,4 +55,8 @@ export class ChessDbApiContract extends API implements APIContract {
   getMethodRemoteContracts(): RemoteHttpToolConfig<{}>[] {
       return [];
   }
+
+  isRemoteEnvContract(): boolean {
+    return this.getRemoteHeaderSupported();
+  }
 }

@@ -86,4 +86,8 @@ export class NNEDBApiContract extends API implements APIContract {
   getMethodRemoteContracts(): RemoteHttpToolConfig<{}>[] {
       return [];
   }
+
+  isRemoteEnvContract(): boolean {
+    return this.getRemoteHeaderSupported();
+  }
 }

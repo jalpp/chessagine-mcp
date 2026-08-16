@@ -10,16 +10,10 @@ import { remoteHttpToolAdapter } from "../mcp/remote/remoteHttpToolAdapter.js";
 export class MCPContractHandshakeStrategy {
   private McpServer: McpServer;
   private contracts: APIContract[];
-  private enableRemoteEnv: boolean;
 
-  constructor(
-    mcpServer: McpServer,
-    handShakeContracts: APIContract[],
-    enableRemote: boolean,
-  ) {
+  constructor(mcpServer: McpServer, handShakeContracts: APIContract[]) {
     this.McpServer = mcpServer;
     this.contracts = handShakeContracts;
-    this.enableRemoteEnv = enableRemote;
   }
 
   public applyBulkContracts() {
@@ -38,25 +32,27 @@ export class MCPContractHandshakeStrategy {
     const remoteContracts = contract.getMethodRemoteContracts();
     const remoteCOntractsSize = remoteContracts.length;
 
-    if (remoteCOntractsSize > 1 && this.enableRemoteEnv) {
+    if (contract.isRemoteEnvContract() && remoteCOntractsSize > 1) {
       for (let i = 0; i < remoteCOntractsSize; i++) {
         remoteHttpToolAdapter(this.McpServer, remoteContracts[i]);
       }
-    } else if (getContractsSize > 1) {
-      for (let i = 0; i < getContractsSize; i++) {
-        getToolAdapter(this.McpServer, getContracts[i]);
+    } else if (!contract.isRemoteEnvContract()) {
+      if (getContractsSize > 1) {
+        for (let i = 0; i < getContractsSize; i++) {
+          getToolAdapter(this.McpServer, getContracts[i]);
+        }
       }
-    }
 
-    if (postContractsSize > 1) {
-      for (let i = 0; i < postContractsSize; i++) {
-        postToolAdapter(this.McpServer, postContracts[i]);
+      if (postContractsSize > 1) {
+        for (let i = 0; i < postContractsSize; i++) {
+          postToolAdapter(this.McpServer, postContracts[i]);
+        }
       }
-    }
 
-    if (deleteContractsSize > 1) {
-      for (let i = 0; i < deleteContractsSize; i++) {
-        deleteToolAdapter(this.McpServer, deleteContracts[i]);
+      if (deleteContractsSize > 1) {
+        for (let i = 0; i < deleteContractsSize; i++) {
+          deleteToolAdapter(this.McpServer, deleteContracts[i]);
+        }
       }
     }
   }

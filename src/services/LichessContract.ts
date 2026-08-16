@@ -149,4 +149,8 @@ export class LichessContract extends API implements APIContract {
 
     return remoteContracts;
   }
+
+  isRemoteEnvContract(): boolean {
+    return this.getRemoteHeaderSupported();
+  }
 }

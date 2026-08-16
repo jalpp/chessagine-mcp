@@ -5,11 +5,17 @@ export class API {
 
     private serviceType: ExternalService;
     private factory: authServiceConfig;
+    private isRemoteHeaderSupported;
 
 
     constructor(service: ExternalService){
         this.serviceType = service;
         this.factory =  getAuthServiceFactory(this.serviceType);
+        if(this.factory.headerKey){
+            this.isRemoteHeaderSupported = true;
+        }else{
+            this.isRemoteHeaderSupported = false;
+        }
     }
 
 
@@ -19,6 +25,10 @@ export class API {
 
     public getAuthServiceConfig(){
         return this.factory;
+    }
+
+    public getRemoteHeaderSupported(){
+        return this.isRemoteHeaderSupported;
     }
 
 }

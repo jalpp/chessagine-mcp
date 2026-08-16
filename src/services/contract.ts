@@ -11,4 +11,6 @@ export interface APIContract {
 
     getMethodRemoteContracts(): RemoteHttpToolConfig<{}>[];
 
+    isRemoteEnvContract(): boolean;
+
 }

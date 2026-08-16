@@ -5,10 +5,7 @@ import {
 } from "@jalpp/mcp-adapter";
 import { API } from "./Api.js";
 import { APIContract } from "./contract.js";
-import {
-  gamePgnSchema,
-  is960Schema,
-} from "../runner/schema.js";
+import { gamePgnSchema, is960Schema } from "../runner/schema.js";
 import z from "zod";
 import { RemoteHttpToolConfig } from "../mcp/remote/remoteHttpToolAdapter.js";
 
@@ -71,6 +68,10 @@ export class UtilEngineContract extends API implements APIContract {
   }
 
   getMethodRemoteContracts(): RemoteHttpToolConfig<{}>[] {
-      return [];
+    return [];
+  }
+
+  isRemoteEnvContract(): boolean {
+    return this.getRemoteHeaderSupported();
   }
 }

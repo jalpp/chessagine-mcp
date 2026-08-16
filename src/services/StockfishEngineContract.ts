@@ -137,4 +137,8 @@ export class StockfishApiContract extends API implements APIContract {
   getMethodRemoteContracts(): RemoteHttpToolConfig<{}>[] {
       return [];
   }
+
+  isRemoteEnvContract(): boolean {
+    return this.getRemoteHeaderSupported();
+  }
 }

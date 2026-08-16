@@ -136,6 +136,10 @@ export class ThemeApiContract extends API implements APIContract {
   }
 
   getMethodRemoteContracts(): RemoteHttpToolConfig<{}>[] {
-      return [];
+    return [];
+  }
+
+  isRemoteEnvContract(): boolean {
+    return this.getRemoteHeaderSupported();
   }
 }
