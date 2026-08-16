@@ -11,8 +11,18 @@
 import { Chess } from "chess.js";
 
 const PIECE_UNICODE: Record<string, string> = {
-  wp: "♙", wn: "♘", wb: "♗", wr: "♖", wq: "♕", wk: "♔",
-  bp: "♟", bn: "♞", bb: "♝", br: "♜", bq: "♛", bk: "♚",
+  wp: "♙",
+  wn: "♘",
+  wb: "♗",
+  wr: "♖",
+  wq: "♕",
+  wk: "♔",
+  bp: "♟",
+  bn: "♞",
+  bb: "♝",
+  br: "♜",
+  bq: "♛",
+  bk: "♚",
 };
 
 const BASE_STYLE = `
@@ -67,7 +77,9 @@ function squaresHtmlFromFen(fen: string): string {
     for (let file = 0; file < 8; file++) {
       const piece = board[rank][file];
       const isLight = (rank + file) % 2 === 0;
-      const pieceChar = piece ? PIECE_UNICODE[`${piece.color}${piece.type}`] ?? "" : "";
+      const pieceChar = piece
+        ? (PIECE_UNICODE[`${piece.color}${piece.type}`] ?? "")
+        : "";
       squares += `<div class="sq ${isLight ? "light" : "dark"}">${pieceChar}</div>`;
     }
   }
@@ -137,8 +149,12 @@ export function renderPgnViewerHtml(pgn: string): string {
     })
     .join(" ");
 
-  const headerEntries = Object.entries(headers).filter(([, v]) => v !== null && v !== undefined && v !== "?");
-  const headerHtml = headerEntries.map(([k, v]) => `${escapeHtml(k)}: ${escapeHtml(String(v))}`).join(" &middot; ");
+  const headerEntries = Object.entries(headers).filter(
+    ([, v]) => v !== null && v !== undefined && v !== "?",
+  );
+  const headerHtml = headerEntries
+    .map(([k, v]) => `${escapeHtml(k)}: ${escapeHtml(String(v))}`)
+    .join(" &middot; ");
 
   const initialIdx = positions.length - 1;
 

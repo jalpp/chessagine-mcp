@@ -9,7 +9,7 @@ import { registerAgine } from "../mcp/registerAgine.js";
   try {
    
     const transport = new StdioServerTransport();
-    registerAgine(server);
+    registerAgine(server, false);
     await server.connect(transport);
     console.error("ChessAgine MCP Server running on stdio");
   } catch (error) {

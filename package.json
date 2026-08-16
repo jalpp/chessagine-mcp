@@ -1,6 +1,6 @@
 {
   "name": "chessagine-mcp",
-  "version": "0.7.9",
+  "version": "0.8.0",
   "description": "",
   "type": "module",
   "main": "build/runner/stdio.js",

@@ -1,5 +1,3 @@
-
-
 export const REMOTE_CRED_HEADERS = {
   lichess: "x-lichess-token",
   chessboardMagic: "x-chessboardmagic-token",
@@ -35,15 +33,18 @@ function readHeader(headers: HeaderLike, name: string): string | undefined {
   return value || undefined;
 }
 
-
-export function extractRemoteCredentials(headers: HeaderLike): RemoteCredentials {
+export function extractRemoteCredentials(
+  headers: HeaderLike,
+): RemoteCredentials {
   return {
     lichessToken: readHeader(headers, REMOTE_CRED_HEADERS.lichess),
-    chessboardMagicToken: readHeader(headers, REMOTE_CRED_HEADERS.chessboardMagic),
+    chessboardMagicToken: readHeader(
+      headers,
+      REMOTE_CRED_HEADERS.chessboardMagic,
+    ),
     posiraToken: readHeader(headers, REMOTE_CRED_HEADERS.posira),
     dojoToken: readHeader(headers, REMOTE_CRED_HEADERS.dojo),
   };
 }
-
 
 export type RemoteAuthInfoExtra = RemoteCredentials;

@@ -1,7 +1,7 @@
 {
   "manifest_version": "0.3",
   "name": "chessagine-mcp",
-  "version": "0.7.9",
+  "version": "0.8.0",
   "description": "ChessAgine MCP connects LLMs directly to live chess context Stockfish evaluation, board state, positional themes, ChessDB openings, Lichess games, and neural engines like Maia3, Leela, and Elite Leela. It also renders chess positions and full PGN games for deep visual analysis, turning language models into truly chess-aware agents.",
   "author": {
     "name": "Jalp",
