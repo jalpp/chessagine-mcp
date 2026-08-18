@@ -79,9 +79,6 @@ The local server reads credentials from environment variables, same as always:
 | `POSIRA_API_KEY` | `get-posira-explorer`, `get-posira-health` |
 | `DOJO_PAT_TOKEN` | `get-dojo-pat-user`, `get-dojo-requirements`, `update-dojo-progress` |
 
-The ChessDojo tools also read `DOJO_ENDPOINT` to pick which deployment of the `/pat/*` API they call, since (unlike the other services above) there's no single shared public deployment — it defaults to the reference deployment if unset.
-
-Every one of these tools also accepts an optional `token` argument per call, which takes priority over the env var — pass your own token in conversation if you want to use something other than the server's default (e.g. to read private Lichess studies).
 
 Add an `"env"` object next to `"command"`/`"args"` in any client's local config from this guide. For example, in Claude Desktop's `claude_desktop_config.json`:
 
@@ -122,9 +119,8 @@ Restart the client after adding env vars, same as any other config change.
 
 ### Remote (hosted) server: HTTP headers, not env vars
 
-The hosted server at `https://chessagine-mcp.vercel.app/mcp` (and any Vercel/Express deployment built from `api/mcp.ts` / `src/runner/remote.ts`) intentionally has **no server-side credentials of its own** — it never reads `LICHESS_API_TOKEN`, `CHESSBOARD_MAGIC_PAT`, or `POSIRA_API_KEY` from its environment. Since it's a single shared deployment used by many people at once, there's no safe "server default" to fall back to; every caller supplies their own.
+The hosted server at `https://chessagine-mcp.vercel.app/mcp` (and any Vercel/Express deployment built from `api/mcp.ts` / `src/runner/remote.ts`) intentionally has **no server-side credentials of its own** — it never reads `LICHESS_API_TOKEN`, `CHESSBOARD_MAGIC_PAT`, or `POSIRA_API_KEY` from its environment. Since it's a single shared deployment used by many people at once, there's no safe "server default" to fall back to; every caller supplies their own. Pass the token via following headers
 
-There are two ways to supply a token to the remote server, and **the header always wins if both are present for the same call**:
 
 | Header | Service |
 |---|---|
@@ -134,7 +130,7 @@ There are two ways to supply a token to the remote server, and **the header alwa
 | `X-Dojo-Token` | ChessDojo PAT tools |
 
 1. **A static per-server header (recommended)** — set once in your client's MCP server config, the same way you'd set an `env` block for a local server. This is the same mechanism popular hosted MCP servers (Linear, Asana, etc.) use for Bearer tokens; ChessAgine uses three separate headers instead of one `Authorization` header because it proxies three independent services. The token never enters the conversation or the model's context this way.
-2. **The tool's `token` argument (fallback)** — if a header wasn't set for a given service, every tool above still accepts a `token` argument, same as the local server. Tell the agent your token in conversation and it'll pass it along per call. Use this if your client doesn't support setting custom static headers.
+
 
 Example for a client with a JSON `mcpServers` config that supports `headers` (Cursor, Windsurf, Cline, VS Code, Zed via `mcp-remote`, etc. — see each client's section below):
 
@@ -167,10 +163,6 @@ mcpServers:
       X-Posira-Token: your-posira-api-key
       X-Dojo-Token: your-chessdojo-pat
 ```
-
-Omit whichever headers you don't need — each is independent, and any tool with neither a header nor a `token` argument for its service just makes an unauthenticated request (which is fine for the Lichess/CBM/Posira endpoints that don't strictly require a key; the ChessDojo PAT endpoints do require one and will return an auth error without it).
-
-If you deploy your own fork to Vercel (see the main README's "Deploy your own instance" section), this same header-first design still applies to your deployment — there's no way to configure a shared server-side default even for a self-hosted fork, by design. If you want a private single-user deployment with a fixed key baked in, use the local stdio server instead.
 
 ## Claude Desktop
 

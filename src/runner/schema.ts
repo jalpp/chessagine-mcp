@@ -179,9 +179,7 @@ export const dojoScoreboardOnlySchema = z
   .default(false)
   .describe("Whether to only return requirements that are visible on the scoreboard");
 
-// Mirrors jackstenglein/chess-dojo's ProgressUpdateRequest
-// (backend/user/progress/update/main.go), submitted by the frontend as
-// UpdateUserProgressRequest (frontend/src/api/userApi.ts) to POST /user/progress/v3.
+
 export const dojoRequirementIdSchema = z
   .string()
   .min(1)
