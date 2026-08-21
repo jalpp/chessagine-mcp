@@ -6,7 +6,7 @@ import {
 import { API } from "./Api.js";
 import { APIContract } from "./contract.js";
 import { fenSchema } from "../runner/schema.js";
-import { RemoteHttpToolConfig } from "../mcp/remote/remoteHttpToolAdapter.js";
+import { SERVICE_CONFIG_BASE_URL_MAP } from "./config.js";
 
 export class ChessDbApiContract extends API implements APIContract {
   constructor() {
@@ -14,9 +14,7 @@ export class ChessDbApiContract extends API implements APIContract {
   }
 
   getContracts(): GetToolAdapterConfig<{}>[] {
-    const factory = this.getAuthServiceConfig();
-
-    const BASE_URL = factory.baseUrl;
+    const BASE_URL = SERVICE_CONFIG_BASE_URL_MAP["CHESSDB_BASE_URL"];
 
     const contracts: GetToolAdapterConfig<{}>[] = [
       {
@@ -50,13 +48,5 @@ export class ChessDbApiContract extends API implements APIContract {
 
   deleteContracts(): DeleteToolAdapterConfig<{}>[] {
     return [];
-  }
-
-  getMethodRemoteContracts(): RemoteHttpToolConfig<{}>[] {
-      return [];
-  }
-
-  isRemoteEnvContract(): boolean {
-    return this.getRemoteHeaderSupported();
   }
 }

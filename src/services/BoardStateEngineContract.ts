@@ -7,13 +7,12 @@ import { API } from "./Api.js";
 import { APIContract } from "./contract.js";
 import {
   fenSchema,
-  gamePgnSchema,
   is960Schema,
   moveSchema,
   movesListSchema,
 } from "../runner/schema.js";
 import { RemoteHttpToolConfig } from "../mcp/remote/remoteHttpToolAdapter.js";
-
+import { SERVICE_CONFIG_BASE_URL_MAP } from "./config.js";
 
 export class BoardStateEngineContract extends API implements APIContract {
   constructor() {
@@ -25,9 +24,7 @@ export class BoardStateEngineContract extends API implements APIContract {
   }
 
   postContracts(): PostToolAdapterConfig<{}>[] {
-    const factory = this.getAuthServiceConfig();
-
-    const BASE_URL = factory.baseUrl;
+    const BASE_URL = SERVICE_CONFIG_BASE_URL_MAP["BOARD_BASE_URL"];
 
     const contracts: PostToolAdapterConfig<{}>[] = [
       {
@@ -84,9 +81,5 @@ export class BoardStateEngineContract extends API implements APIContract {
 
   getMethodRemoteContracts(): RemoteHttpToolConfig<{}>[] {
     return [];
-  }
-
-  isRemoteEnvContract(): boolean {
-    return this.getRemoteHeaderSupported();
   }
 }

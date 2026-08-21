@@ -7,7 +7,7 @@ import { API } from "./Api.js";
 import { APIContract } from "./contract.js";
 import { engineDepthSchema, fenSchema } from "../runner/schema.js";
 import z from "zod";
-import { RemoteHttpToolConfig } from "../mcp/remote/remoteHttpToolAdapter.js";
+import { SERVICE_CONFIG_BASE_URL_MAP } from "./config.js";
 
 export class StockfishApiContract extends API implements APIContract {
   constructor() {
@@ -19,9 +19,7 @@ export class StockfishApiContract extends API implements APIContract {
   }
 
   postContracts(): PostToolAdapterConfig<{}>[] {
-    const factory = this.getAuthServiceConfig();
-
-    const BASE_URL = factory.baseUrl;
+    const BASE_URL = SERVICE_CONFIG_BASE_URL_MAP["SF_BASE_URL"];
 
     const contracts: PostToolAdapterConfig<{}>[] = [
       {
@@ -132,13 +130,5 @@ export class StockfishApiContract extends API implements APIContract {
 
   deleteContracts(): DeleteToolAdapterConfig<{}>[] {
     return [];
-  }
-
-  getMethodRemoteContracts(): RemoteHttpToolConfig<{}>[] {
-      return [];
-  }
-
-  isRemoteEnvContract(): boolean {
-    return this.getRemoteHeaderSupported();
   }
 }
