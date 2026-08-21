@@ -1,17 +1,21 @@
 #!/usr/bin/env node
 
 import { NodeStreamableHTTPServerTransport } from "@modelcontextprotocol/node";
-import type { McpServer, AuthInfo } from "@modelcontextprotocol/server";
+import { McpServer } from "@modelcontextprotocol/server";
+import type { AuthInfo } from "@modelcontextprotocol/server";
 import { createMcpExpressApp } from "@modelcontextprotocol/express";
 import cors from "cors";
 import type { Request, Response } from "express";
-import { server } from "./server.js";
 import { registerAgine } from "../mcp/registerAgine.js";
 import { extractRemoteCredentials } from "../mcp/remote/remoteAuth.js";
 
 
 function createChessAgineServer(): McpServer {
-  const serverInstance = Object.create(server);
+  const serverInstance = new McpServer({
+    name: "chessagine-mcp",
+    websiteUrl: "https://www.chessagine.com/",
+    version: "0.8.0",
+  });
   registerAgine(serverInstance);
   return serverInstance;
 }

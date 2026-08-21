@@ -1,7 +1,7 @@
 {
   "manifest_version": "0.3",
-  "name": "chessagine-mcp",
-  "version": "0.8.0",
+  "name": "chessagine-mcp-beta5",
+  "version": "0.8.0-beta-5",
   "description": "ChessAgine MCP connects LLMs directly to live chess context Stockfish evaluation, board state, positional themes, ChessDB openings, Lichess games, and neural engines like Maia3, Leela, and Elite Leela. It also renders chess positions and full PGN games for deep visual analysis, turning language models into truly chess-aware agents.",
   "author": {
     "name": "Jalp",
@@ -21,8 +21,7 @@
       "env": {
         "LICHESS_API_TOKEN": "${user_config.LICHESS_API_KEY}",
         "CHESSBOARD_MAGIC_PAT": "${user_config.CHESSBOARD_MAGIC_PAT}",
-        "POSIRA_API_KEY": "${user_config.POSIRA_API_KEY}",
-        "DOJO_API_KEY": "${user_config.DOJO_API_KEY}"
+        "CHESSDOJO_API_KEY": "${user_config.CHESSDOJO_API_KEY}"
       }
     }
   },
@@ -41,14 +40,7 @@
       "sensitive": true,
       "required": false
     },
-    "POSIRA_API_KEY": {
-      "type": "string",
-      "title": "Posira explorer PAT Key",
-      "description": "Your Posira API key, get the PAT from here https://posira.dev/dashboard/login",
-      "sensitive": true,
-      "required": false
-    },
-    "DOJO_API_KEY": {
+    "CHESSDOJO_API_KEY": {
       "type": "string",
       "title": "ChessDojo API Key",
       "description": "Your ChessDojo Personal Access Token (PAT) or API key. Generate a PAT from your ChessDojo account settings.",

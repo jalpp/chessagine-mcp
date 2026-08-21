@@ -1,3 +1,4 @@
+import { HttpAuth } from "@jalpp/mcp-adapter";
 import {
   ExternalService,
   SERVICE_CONFIG_API_TOKEN,
@@ -5,20 +6,17 @@ import {
   SERVICE_CONFIG_REMOTE_API_HEADER_KEY,
 } from "../../services/config.js";
 
-type tokenType = "bearer";
-
-type authType = { type: tokenType; token: string };
 
 export interface AuthServiceConfig {
   baseUrl: string;
-  staticAuth: authType;
+  staticAuth: HttpAuth;
   headerKey?: string;
 }
 
 export function getAuthServiceFactory(
   serviceType: ExternalService,
 ): AuthServiceConfig {
-  const authSeviceType: authType = {
+  const authSeviceType: HttpAuth = {
     type: "bearer",
     token: SERVICE_CONFIG_API_TOKEN[serviceType] ?? "",
   };

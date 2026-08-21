@@ -11,7 +11,7 @@ export const SERVICE_CONFIG_BASE_URL_MAP: Record<ExternalService, string> = {
     LICHESS_BASE_URL: "https://lichess.org",
     POSIRA_BASE_URL: "https://api.posira.dev",
     CBM_BASE_URL: "https://api.chessboardmagic.com",
-    DOJO_BASE_URL: process.env.DOJO_ENDPOINT ?? "https://c2qamdaw08.execute-api.us-east-1.amazonaws.com",
+    DOJO_BASE_URL: "https://g4shdaq6ug.execute-api.us-east-1.amazonaws.com",
 };
 
 export const SERVICE_CONFIG_REMOTE_API_HEADER_KEY: Record<ExternalService, string | undefined> = {
@@ -37,6 +37,6 @@ export const SERVICE_CONFIG_API_TOKEN: Record<ExternalService, string | undefine
     LICHESS_BASE_URL: process.env.LICHESS_API_TOKEN ?? "",
     POSIRA_BASE_URL: process.env.POSIRA_API_KEY ?? "",
     CBM_BASE_URL: process.env.CHESSBOARD_MAGIC_PAT ?? "",
-    DOJO_BASE_URL: process.env.DOJO_API_KEY ?? ""
+    DOJO_BASE_URL: process.env.CHESSDOJO_API_KEY ?? ""
 
 }
