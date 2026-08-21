@@ -6,7 +6,7 @@ import type { AuthInfo } from "@modelcontextprotocol/server";
 import { createMcpExpressApp } from "@modelcontextprotocol/express";
 import cors from "cors";
 import type { Request, Response } from "express";
-import { registerAgine } from "../mcp/registerAgine.js";
+import { registerAgineRemote } from "../mcp/registerAgineRemote.js";
 import { extractRemoteCredentials } from "../mcp/remote/remoteAuth.js";
 
 
@@ -16,7 +16,7 @@ function createChessAgineServer(): McpServer {
     websiteUrl: "https://www.chessagine.com/",
     version: "0.8.0",
   });
-  registerAgine(serverInstance);
+  registerAgineRemote(serverInstance);
   return serverInstance;
 }
 

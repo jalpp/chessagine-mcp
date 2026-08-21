@@ -15,7 +15,7 @@ export const SERVICE_CONFIG_BASE_URL_MAP: Record<ExternalService, string> = {
 };
 
 export const SERVICE_CONFIG_REMOTE_API_HEADER_KEY: Record<ExternalService, string | undefined> = {
-     SF_BASE_URL: undefined,
+    SF_BASE_URL: undefined,
     THEME_BASE_URL: undefined,
     UTIL_BASE_URL: undefined,
     BOARD_BASE_URL: undefined,
@@ -37,6 +37,6 @@ export const SERVICE_CONFIG_API_TOKEN: Record<ExternalService, string | undefine
     LICHESS_BASE_URL: process.env.LICHESS_API_TOKEN ?? "",
     POSIRA_BASE_URL: process.env.POSIRA_API_KEY ?? "",
     CBM_BASE_URL: process.env.CHESSBOARD_MAGIC_PAT ?? "",
-    DOJO_BASE_URL: process.env.CHESSDOJO_API_KEY ?? ""
+    DOJO_BASE_URL: process.env.DOJO_PAT_TOKEN ?? ""
 
 }
