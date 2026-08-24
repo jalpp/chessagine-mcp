@@ -1,6 +1,6 @@
 {
   "name": "chessagine-mcp",
-  "version": "0.7.9",
+  "version": "0.8.0",
   "description": "",
   "type": "module",
   "main": "build/runner/stdio.js",
@@ -23,8 +23,10 @@
     "debug": "npx @modelcontextprotocol/inspector node build/runner/stdio.js",
     "start": "node build/runner/stdio.js",
     "remote": "node build/runner/remote.js",
+    "releasetest": "npm run clean && npm run build && npm run test",
     "clean": "shx rm -rf build dist",
-    "hardclean": "shx rm -rf node_modules"
+    "hardclean": "shx rm -rf node_modules",
+    "test": "python runSmokeTest.py --env local"
   },
   "keywords": [],
   "author": "Jalp",

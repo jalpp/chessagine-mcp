@@ -1,25 +1,22 @@
 import { McpServer } from "@modelcontextprotocol/server";
-import { registerLichessTools } from "./lichessToolRegister.js";
 import { registerRenderingTools } from "./renderToolRegister.js";
-import { registerUtilsTools } from "./utilToolRegister.js";
-import { registerStockfishTools } from "./stockfishToolRegister.js";
-import { registerCBMTools } from "./cbmToolRegister.js";
-import { registerChessDBTools } from "./chessDbToolRegister.js";
-import { registerNeuralNetTools } from "./neuralNetToolRegister.js";
-import { registerPosiraTools } from "./posiraToolRegister.js";
-import { registerThemeAnalysisTools } from "./themesToolRegister.js";
-import { registerBoardStateTools } from "./boardToolRegister.js";
-
+import { performChessAgineHandshake } from "../services/HandshakeEntryPoint.js";
+import { registerDojoTools } from "./registerDojoContract.js";
+import { registerCBMTools } from "./registerCbmContract.js";
+import { registerLichessTools } from "./registerLichessContract.js";
+import { registerPosiraTools } from "./registerPosiraContract.js";
 
 export function registerAgine(server: McpServer): void {
-    registerLichessTools(server);
-    registerRenderingTools(server);
+    // non remote contracts taken care by handshake imp
+    performChessAgineHandshake(server);
+
+    // remote ones we manually register to have difference remote/stdio functions more code but more reliable also
+    registerDojoTools(server);
     registerCBMTools(server);
-    registerStockfishTools(server);
-    registerUtilsTools(server);
-    registerThemeAnalysisTools(server);
-    registerBoardStateTools(server);
-    registerChessDBTools(server);
-    registerNeuralNetTools(server);
+    registerLichessTools(server);
     registerPosiraTools(server);
+
+    // rendering we keep as if its a remote server due to its rendering functions 
+    registerRenderingTools(server);
+    
 }

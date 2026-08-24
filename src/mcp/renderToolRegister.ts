@@ -1,17 +1,17 @@
 import { McpServer } from "@modelcontextprotocol/server";
-// @modelcontextprotocol/ext-apps has not yet published a v2-compatible
-// release (still peer-locked to @modelcontextprotocol/sdk@^1.29.0 as of
-// 1.7.5), so this file stays a deliberate v1/v2 boundary: it accepts the
-// same v2 McpServer every other register*Tools function does, but casts to
-// ext-apps' own v1 McpServer type only at the two call sites below. Revert
-// this cast once ext-apps ships a v2-compatible release.
 import type { McpServer as V1McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { fenSchema, gamePgnSchema } from "../runner/schema.js";
-import { registerAppResource, registerAppTool } from "@modelcontextprotocol/ext-apps/server";
+import {
+  registerAppResource,
+  registerAppTool,
+} from "@modelcontextprotocol/ext-apps/server";
 import path from "path";
 import { fileURLToPath } from "url";
 import { readFile } from "fs/promises";
-import { renderFenBoardHtml, renderPgnViewerHtml } from "./htmlBoardRenderer.js";
+import {
+  renderFenBoardHtml,
+  renderPgnViewerHtml,
+} from "./htmlBoardRenderer.js";
 
 const RAW_HTML_INSTRUCTIONS =
   "Raw standalone HTML is included below as a fenced ```html code block. This does NOT " +
@@ -26,7 +26,7 @@ export function registerRenderingTools(server: McpServer): void {
   const legacyServer = server as unknown as V1McpServer;
 
   const chessBoardResourceUri = "ui://chessagine/chess-board";
-  
+
   registerAppResource(
     legacyServer,
     "Chess Board Viewer",
@@ -37,7 +37,7 @@ export function registerRenderingTools(server: McpServer): void {
     async () => {
       const htmlPath = path.join(__dirname, "../../dist/chess-board.html");
       const htmlContent = await readFile(htmlPath, "utf-8");
-      
+
       return {
         contents: [
           {
@@ -47,18 +47,18 @@ export function registerRenderingTools(server: McpServer): void {
           },
         ],
       };
-    }
+    },
   );
 
-  
   registerAppTool(
     legacyServer,
     "render_chess_board",
     {
       title: "Render Chess Board",
-      description: "Render an interactive chess board with the given position. Shows the board visually for a single position. Use this for displaying a specific chess position from FEN notation.",
+      description:
+        "Render an interactive chess board with the given position. Shows the board visually for a single position. Use this for displaying a specific chess position from FEN notation.",
       inputSchema: {
-        fen: fenSchema
+        fen: fenSchema,
       },
       _meta: {
         ui: {
@@ -81,7 +81,7 @@ export function registerRenderingTools(server: McpServer): void {
         const html = renderFenBoardHtml(fen);
         content.push(
           { type: "text", text: RAW_HTML_INSTRUCTIONS },
-          { type: "text", text: "```html\n" + html + "\n```" }
+          { type: "text", text: "```html\n" + html + "\n```" },
         );
       } catch (err) {
         content.push({
@@ -102,22 +102,23 @@ export function registerRenderingTools(server: McpServer): void {
           },
         },
       };
-    }
+    },
   );
 
   const pgnViewerResourceUri = "ui://chessagine/pgn-viewer";
-  
+
   registerAppResource(
     legacyServer,
     "PGN Game Viewer",
     pgnViewerResourceUri,
     {
-      description: "Interactive PGN game viewer with move navigation and analysis",
+      description:
+        "Interactive PGN game viewer with move navigation and analysis",
     },
     async () => {
       const htmlPath = path.join(__dirname, "../../dist/pgn-viewer.html");
       const htmlContent = await readFile(htmlPath, "utf-8");
-      
+
       return {
         contents: [
           {
@@ -127,18 +128,18 @@ export function registerRenderingTools(server: McpServer): void {
           },
         ],
       };
-    }
+    },
   );
-
 
   registerAppTool(
     legacyServer,
     "render_pgn_viewer",
     {
       title: "Render PGN Game Viewer",
-      description: "Render an interactive PGN game viewer that allows navigating through chess game moves. Use this for displaying complete chess games with move history, annotations, and the ability to step through moves. Supports PGN format with headers like Event, Site, Date, White, Black, Result, and move notation.",
+      description:
+        "Render an interactive PGN game viewer that allows navigating through chess game moves. Use this for displaying complete chess games with move history, annotations, and the ability to step through moves. Supports PGN format with headers like Event, Site, Date, White, Black, Result, and move notation.",
       inputSchema: {
-        pgn: gamePgnSchema
+        pgn: gamePgnSchema,
       },
       _meta: {
         ui: {
@@ -161,7 +162,7 @@ export function registerRenderingTools(server: McpServer): void {
         const html = renderPgnViewerHtml(pgn);
         content.push(
           { type: "text", text: RAW_HTML_INSTRUCTIONS },
-          { type: "text", text: "```html\n" + html + "\n```" }
+          { type: "text", text: "```html\n" + html + "\n```" },
         );
       } catch (err) {
         content.push({
@@ -182,6 +183,6 @@ export function registerRenderingTools(server: McpServer): void {
           },
         },
       };
-    }
+    },
   );
 }

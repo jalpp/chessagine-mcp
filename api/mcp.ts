@@ -1,6 +1,6 @@
 import { createMcpHandler, withMcpAuth } from "mcp-handler";
 import type { AuthInfo } from "@modelcontextprotocol/server";
-import { registerAgineRemote } from "../src/mcp/remote/registerAgineRemote.js";
+import { registerAgineRemote } from "../src/mcp/registerAgineRemote.js";
 import { extractRemoteCredentials } from "../src/mcp/remote/remoteAuth.js";
 
 const mcpHandler = createMcpHandler(
