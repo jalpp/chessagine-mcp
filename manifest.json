@@ -1,7 +1,7 @@
 {
   "manifest_version": "0.3",
   "name": "chessagine-mcp",
-  "version": "0.8.0",
+  "version": "0.8.1",
   "description": "ChessAgine MCP connects LLMs directly to live chess context Stockfish evaluation, board state, positional themes, ChessDB openings, Lichess games, and neural engines like Maia3, Leela, and Elite Leela. It also renders chess positions and full PGN games for deep visual analysis, turning language models into truly chess-aware agents.",
   "author": {
     "name": "Jalp",
@@ -36,13 +36,6 @@
       "type": "string",
       "title": "ChessBoardMagic PAT Key",
       "description": "Your ChessBoard Magic Personal Access Token (PAT) which you get from here https://chessboardmagic.com/",
-      "sensitive": true,
-      "required": false
-    },
-    "POSIRA_API_KEY": {
-      "type": "string",
-      "title": "Posira explorer PAT Key",
-      "description": "Your Posira API key, get the PAT from here https://posira.dev/dashboard/login",
       "sensitive": true,
       "required": false
     },
