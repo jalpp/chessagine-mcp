@@ -20,6 +20,7 @@
     "build:pgn-viewer": "cross-env BUILD_APP=pgn-viewer vite build",
     "build": "npm run build:ui && npm run build:mcp",
     "publish": "npm run clean && npm run build",
+    "isReady": "npm run publish && npm run test",
     "debug": "npx @modelcontextprotocol/inspector node build/runner/stdio.js",
     "start": "node build/runner/stdio.js",
     "remote": "node build/runner/remote.js",
@@ -37,10 +38,9 @@
   "dependencies": {
     "@jalpp/mcp-adapter": "^4.0.0",
     "@modelcontextprotocol/express": "^2.0.0",
-    "@modelcontextprotocol/ext-apps": "^1.7.5",
-    "@modelcontextprotocol/inspector": "^2.1.0",
+    "@modelcontextprotocol/ext-apps": "^2.0.0",
+    "@modelcontextprotocol/inspector": "^2.6.0",
     "@modelcontextprotocol/node": "^2.0.0",
-    "@modelcontextprotocol/sdk": "^1.30.0",
     "@modelcontextprotocol/server": "^2.0.0",
     "axios": "^1.17.0",
     "chess.js": "^1.4.0",
@@ -66,7 +66,6 @@
     "ts-node": "^10.9.2",
     "typescript": "^5.9.3",
     "vite": "^8.2.1",
-    "vite-plugin-singlefile": "^2.3.3",
-    "void57-chess": "^1.0.4"
+    "vite-plugin-singlefile": "^2.3.3"
   }
 }

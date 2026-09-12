@@ -1,5 +1,4 @@
 import { McpServer } from "@modelcontextprotocol/server";
-import type { McpServer as V1McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { fenSchema, gamePgnSchema } from "../runner/schema.js";
 import {
   registerAppResource,
@@ -12,6 +11,7 @@ import {
   renderFenBoardHtml,
   renderPgnViewerHtml,
 } from "./htmlBoardRenderer.js";
+import z4 from "zod/v4";
 
 const RAW_HTML_INSTRUCTIONS =
   "Raw standalone HTML is included below as a fenced ```html code block. This does NOT " +
@@ -23,12 +23,11 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 export function registerRenderingTools(server: McpServer): void {
-  const legacyServer = server as unknown as V1McpServer;
 
   const chessBoardResourceUri = "ui://chessagine/chess-board";
 
   registerAppResource(
-    legacyServer,
+    server,
     "Chess Board Viewer",
     chessBoardResourceUri,
     {
@@ -51,15 +50,13 @@ export function registerRenderingTools(server: McpServer): void {
   );
 
   registerAppTool(
-    legacyServer,
+    server,
     "render_chess_board",
     {
       title: "Render Chess Board",
       description:
         "Render an interactive chess board with the given position. Shows the board visually for a single position. Use this for displaying a specific chess position from FEN notation.",
-      inputSchema: {
-        fen: fenSchema,
-      },
+      inputSchema: z4.object({ fen: fenSchema,}),
       _meta: {
         ui: {
           resourceUri: chessBoardResourceUri,
@@ -108,7 +105,7 @@ export function registerRenderingTools(server: McpServer): void {
   const pgnViewerResourceUri = "ui://chessagine/pgn-viewer";
 
   registerAppResource(
-    legacyServer,
+    server,
     "PGN Game Viewer",
     pgnViewerResourceUri,
     {
@@ -132,15 +129,13 @@ export function registerRenderingTools(server: McpServer): void {
   );
 
   registerAppTool(
-    legacyServer,
+    server,
     "render_pgn_viewer",
     {
       title: "Render PGN Game Viewer",
       description:
         "Render an interactive PGN game viewer that allows navigating through chess game moves. Use this for displaying complete chess games with move history, annotations, and the ability to step through moves. Supports PGN format with headers like Event, Site, Date, White, Black, Result, and move notation.",
-      inputSchema: {
-        pgn: gamePgnSchema,
-      },
+      inputSchema: z4.object({ pgn: gamePgnSchema}),
       _meta: {
         ui: {
           resourceUri: pgnViewerResourceUri,
