@@ -39,7 +39,7 @@ export const LichessContracts:
     auth: staticLichessAuth,
   },
   {
-    name: "get-lichess-games",
+    name: "fetch-lichess-games",
     description:
       "Fetch recent games for a Lichess user in a simple text-friendly format.",
     endpoint:
