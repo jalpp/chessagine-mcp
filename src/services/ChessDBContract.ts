@@ -16,7 +16,7 @@ export class ChessDbApiContract extends API implements APIContract {
   getContracts(): GetToolAdapterConfig<{}>[] {
     const BASE_URL = SERVICE_CONFIG_BASE_URL_MAP["CHESSDB_BASE_URL"];
 
-    const contracts: GetToolAdapterConfig<{}>[] = [
+    return [
       {
         name: "get-chessdb-analysis",
         description: "Fetch position analysis and candidate moves from ChessDB",
@@ -38,8 +38,6 @@ export class ChessDbApiContract extends API implements APIContract {
         inputSchema: { fen: fenSchema },
       },
     ];
-
-    return contracts;
   }
 
   postContracts(): PostToolAdapterConfig<{}>[] {

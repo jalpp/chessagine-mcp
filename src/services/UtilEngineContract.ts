@@ -21,7 +21,7 @@ export class UtilEngineContract extends API implements APIContract {
   postContracts(): PostToolAdapterConfig<{}>[] {
     const BASE_URL = SERVICE_CONFIG_BASE_URL_MAP["UTIL_BASE_URL"];
 
-    const contracts: PostToolAdapterConfig<{}>[] = [
+    return [
       {
         name: "get-chess-knowledge",
         description: "Get the curated chess knowledge base as a JSON object.",
@@ -57,8 +57,6 @@ export class UtilEngineContract extends API implements APIContract {
         },
       },
     ];
-
-    return contracts;
   }
 
   deleteContracts(): DeleteToolAdapterConfig<{}>[] {

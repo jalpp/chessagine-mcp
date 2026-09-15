@@ -21,7 +21,7 @@ export class NNEDBApiContract extends API implements APIContract {
   postContracts(): PostToolAdapterConfig<{}>[] {
     const BASE_URL = SERVICE_CONFIG_BASE_URL_MAP["NN_BASE_URL"];
 
-    const contracts: PostToolAdapterConfig<{}>[] = [
+    return [
       {
         name: "get-maia3-analysis",
         description:
@@ -73,8 +73,6 @@ export class NNEDBApiContract extends API implements APIContract {
         },
       },
     ];
-
-    return contracts;
   }
 
   deleteContracts(): DeleteToolAdapterConfig<{}>[] {

@@ -1,13 +1,3 @@
-/**
- * @file Self-contained, dependency-free HTML renderers for chess positions and games.
- *
- * These do NOT rely on the MCP Apps/UI resource extension (@modelcontextprotocol/ext-apps)
- * used by registerRenderingTools' registered "ui://" resources. Instead, they produce a
- * complete standalone HTML document (inline CSS, inline vanilla JS, no external requests)
- * that any MCP client or agent can take and render on its own -- e.g. by saving it to a
- * .html file and opening it in a browser, or by rendering it as an HTML artifact/preview
- * in clients that support that.
- */
 import { Chess } from "chess.js";
 
 const PIECE_UNICODE: Record<string, string> = {
@@ -71,7 +61,7 @@ function escapeHtml(value: string): string {
 
 function squaresHtmlFromFen(fen: string): string {
   const chess = new Chess(fen);
-  const board = chess.board(); // board[0] = rank 8 ... board[7] = rank 1, files a-h left to right
+  const board = chess.board(); 
   let squares = "";
   for (let rank = 0; rank < 8; rank++) {
     for (let file = 0; file < 8; file++) {
@@ -86,12 +76,9 @@ function squaresHtmlFromFen(fen: string): string {
   return squares;
 }
 
-/**
- * Renders a single chess position (FEN) as a complete, standalone HTML document.
- * Throws if the FEN is invalid -- callers should catch and handle gracefully.
- */
+
 export function renderFenBoardHtml(fen: string): string {
-  const chess = new Chess(fen); // throws on invalid FEN
+  const chess = new Chess(fen); 
   const turn = chess.turn() === "w" ? "White" : "Black";
   const squares = squaresHtmlFromFen(fen);
 
@@ -114,16 +101,10 @@ export function renderFenBoardHtml(fen: string): string {
 </html>`;
 }
 
-/**
- * Renders a full PGN game as a complete, standalone, interactive HTML document with
- * Start/Prev/Next/End controls and a clickable move list. All positions are pre-rendered
- * server-side; the only client-side JS is a small inline script that toggles which
- * pre-rendered board is visible, so it works with no build step and no external requests.
- * Throws if the PGN is invalid -- callers should catch and handle gracefully.
- */
+
 export function renderPgnViewerHtml(pgn: string): string {
   const chess = new Chess();
-  chess.loadPgn(pgn); // throws on invalid PGN
+  chess.loadPgn(pgn); 
 
   const headers = chess.header();
   const moves = chess.history({ verbose: true });

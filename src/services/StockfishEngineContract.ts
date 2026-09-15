@@ -21,7 +21,7 @@ export class StockfishApiContract extends API implements APIContract {
   postContracts(): PostToolAdapterConfig<{}>[] {
     const BASE_URL = SERVICE_CONFIG_BASE_URL_MAP["SF_BASE_URL"];
 
-    const contracts: PostToolAdapterConfig<{}>[] = [
+    return [
       {
         name: "get-stockfish-analysis",
         description:
@@ -124,8 +124,6 @@ export class StockfishApiContract extends API implements APIContract {
         },
       },
     ];
-
-    return contracts;
   }
 
   deleteContracts(): DeleteToolAdapterConfig<{}>[] {

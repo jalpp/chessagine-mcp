@@ -29,7 +29,7 @@ export class ThemeApiContract extends API implements APIContract {
   postContracts(): PostToolAdapterConfig<{}>[] {
     const BASE_URL = SERVICE_CONFIG_BASE_URL_MAP["THEME_BASE_URL"];
 
-    const contracts: PostToolAdapterConfig<{}>[] = [
+    return [
       {
         name: "get-theme-scores",
         endpoint: `${BASE_URL}/scores`,
@@ -125,8 +125,6 @@ export class ThemeApiContract extends API implements APIContract {
         },
       },
     ];
-
-    return contracts;
   }
 
   deleteContracts(): DeleteToolAdapterConfig<{}>[] {
