@@ -2,12 +2,15 @@ import { McpServer } from "@modelcontextprotocol/server";
 import { getToolAdapter, postToolAdapter } from "@jalpp/mcp-adapter";
 import { LichessContracts } from "./schema/lichess.js";
 
+
+const POST_CONTRACTS = new Set<string>(["fetch-chess-puzzle"]);
+
 export function registerLichessTools(server: McpServer): void {
-  for (let i = 0; i < LichessContracts.length; i++) {
-    if (LichessContracts[i].name.includes("get")) {
-      getToolAdapter(server, LichessContracts[i]);
+  for (const contract of LichessContracts) {
+    if (POST_CONTRACTS.has(contract.name)) {
+      postToolAdapter(server, contract);
     } else {
-      postToolAdapter(server, LichessContracts[i]);
+      getToolAdapter(server, contract);
     }
   }
 }
