@@ -96,9 +96,11 @@ export function remoteHttpToolAdapter<T extends ZodRawShapeCompat>(
     } catch (err) {
       if (axios.isAxiosError(err)) {
         const status = err.response?.status ?? "unknown";
-        const message =
-          (err.response?.data as { message?: string } | undefined)?.message ??
-          err.message;
+        const data = err.response?.data as
+          | { message?: string; error?: string }
+          | undefined;
+        // Lichess reports failures as { error }, not { message }.
+        const message = data?.message ?? data?.error ?? err.message;
         return toolContentAdapter({}, `HTTP ${status}: ${message}`);
       }
       return toolContentAdapter({}, `Unexpected error: ${String(err)}`);

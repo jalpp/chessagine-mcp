@@ -1,4 +1,5 @@
 import { McpServer } from "@modelcontextprotocol/server";
+import "../services/httpDefaults.js";
 import { registerRenderingTools } from "./renderToolRegister.js";
 import { performChessAgineHandshake } from "../services/HandshakeEntryPoint.js";
 import { registerDojoTools } from "./registerDojoContract.js";
