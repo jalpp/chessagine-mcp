@@ -147,8 +147,7 @@ export const puzzleThemesArraySchema = z4
     "Array of puzzle theme tags to filter by (e.g., ['fork', 'pin', 'mateIn2'])",
   );
 
-// ChessDojo training plan cohorts, mirrored from jackstenglein/chess-dojo's
-// common/src/database/cohort.ts `dojoCohorts` array.
+
 export const dojoCohortSchema = z4
   .enum([
     "0-300",
@@ -254,25 +253,3 @@ export const cbmDir = z4
   "Sort direction: 'asc' (ascending) or 'desc' (descending). Defaults to 'desc'."
 )
   
-
-// "player": {
-//         "type": "string",
-//         "description": "Player name to filter by. Matches as a prefix against either the White or Black name. Optional. Provide 'fen' or 'player' (or both)."
-//       },
-//       "size": {
-//         "type": "number",
-//         "description": "Number of games to return per page (1-100). Defaults to 20."
-//       },
-//       "page": {
-//         "type": "number",
-//         "description": "Page number to return, starting at 1. Defaults to 1. Use with 'totalPages' and 'hasMore' in the response to paginate through results."
-//       },
-//       "sort": {
-//         "type": "string",
-//         "description": "Field to sort by: 'elo' (maximum rating between the two players) or 'date'. Defaults to 'elo'.",
-//         "enum": ["elo", "date"]
-//       },
-//       "dir": {
-//         "type": "string",
-//         "description": "Sort direction: 'asc' (ascending) or 'desc' (descending). Defaults to 'desc'.",
-//         "enum": ["asc", "desc"]
